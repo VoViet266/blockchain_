@@ -50,7 +50,7 @@ const Web3Service = {
     async fetchProtectedData() {
         try {
             const token = localStorage.getItem('accessToken');
-            const res = await axios.get(`${import.meta.env.BACKEND_URL}/auth/me`, {
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
