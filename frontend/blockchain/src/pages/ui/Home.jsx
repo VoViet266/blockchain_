@@ -129,7 +129,7 @@ export default function Home() {
       <div className="max-w-[1080px] mx-auto grid gap-[18px] animate-[fade-up_680ms_ease-out]">
 
         <span className="w-fit border-[1px] border-[#2f6d56] text-[#245542] text-[12px] tracking-[0.12em] uppercase rounded-[999px] px-[12px] py-[8px] bg-white/60 backdrop-blur-[4px]">
-          Farm to Table Visibility
+          Niềm tin tuyệt đối
         </span>
 
         <section className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-[18px]">
@@ -154,7 +154,7 @@ export default function Home() {
 
               {wallet && (
                 <button
-                  className="inline-flex items-center justify-center rounded-[14px] px-[18px] py-[12px] text-[15px] font-semibold transition-all duration-200 hover:-translate-y-[2px] bg-[#fff2f2] text-[#7b2b2b] border-[1px] border-[#984242]/30"
+                  className="inline-flex cursor-pointer items-center justify-center rounded-[14px] px-[18px] py-[12px] text-[15px] transition-all duration-200 hover:-translate-y-[2px] bg-[#fff2f2] text-[#7b2b2b] border-[1px] border-[#984242]/30"
                   type="button"
                   onClick={disconnectWallet}
                 >
@@ -163,7 +163,7 @@ export default function Home() {
               )}
 
               <Link
-                className="inline-flex items-center justify-center rounded-[14px] px-[18px] py-[12px] text-[15px] font-semibold transition-all duration-200 hover:-translate-y-[2px] bg-[#f2efe2] text-[#1f4538] border-[1px] border-[#23493c]/30 no-underline"
+                className="inline-flex items-center justify-center rounded-[14px] px-[18px] py-[12px] text-[15px] transition-all duration-200 hover:-translate-y-[2px] bg-[#f2efe2] text-[#1f4538] border-[1px] border-[#23493c]/30 no-underline"
                 to="/create"
               >
                 Tạo sản phẩm mới

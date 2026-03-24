@@ -124,245 +124,101 @@ export default function Create() {
   };
 
   return (
-    <div className="create-page">
-      <style>
-        {`
-          @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap');
-
-          .create-page {
-            min-height: 100vh;
-            padding: 24px;
-            background:
-              radial-gradient(circle at 85% 12%, rgba(41, 153, 104, 0.2), transparent 36%),
-              radial-gradient(circle at 8% 20%, rgba(255, 191, 92, 0.2), transparent 34%),
-              linear-gradient(150deg, #f7f3e6 0%, #edf4df 52%, #e0efe7 100%);
-            color: #23372e;
-            font-family: "Space Grotesk", sans-serif;
-          }
-
-          .create-shell {
-            max-width: 980px;
-            margin: 0 auto;
-            display: grid;
-            gap: 14px;
-            animation: fade-up 550ms ease-out;
-          }
-
-          .create-card {
-            background: rgba(255, 255, 255, 0.78);
-            border: 1px solid rgba(39, 76, 61, 0.18);
-            border-radius: 24px;
-            padding: 24px;
-            box-shadow: 0 20px 40px rgba(40, 76, 61, 0.08);
-          }
-
-          .create-title {
-            margin: 0 0 8px;
-            font-family: "Fraunces", serif;
-            font-size: clamp(30px, 4vw, 48px);
-            color: #163629;
-          }
-
-          .create-sub {
-            margin: 0;
-            color: #3a5b4d;
-            line-height: 1.6;
-          }
-
-          .wallet-pill {
-            margin-top: 14px;
-            width: fit-content;
-            border-radius: 999px;
-            border: 1px solid rgba(32, 74, 57, 0.25);
-            background: #f8fbf5;
-            padding: 8px 12px;
-            font-size: 13px;
-            color: #2a5443;
-          }
-
-          .action-row {
-            margin-top: 16px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-          }
-
-          .btn {
-            border: none;
-            border-radius: 14px;
-            padding: 11px 16px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.18s ease, box-shadow 0.18s ease;
-          }
-
-          .btn:hover {
-            transform: translateY(-2px);
-          }
-
-          .btn-primary {
-            background: linear-gradient(135deg, #2a875f, #1f6648);
-            color: #effff6;
-            box-shadow: 0 12px 20px rgba(31, 102, 72, 0.23);
-          }
-
-          .btn-secondary {
-            border: 1px solid rgba(34, 72, 58, 0.35);
-            background: #f7efe0;
-            color: #2e5544;
-          }
-
-          .status-box {
-            margin-top: 14px;
-            border-radius: 14px;
-            border: 1px solid #d8e7dd;
-            background: #f6fbf8;
-            padding: 12px;
-            color: #32594b;
-            font-size: 14px;
-          }
-
-          .form-grid {
-            margin-top: 20px;
-            display: grid;
-            gap: 12px;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-          }
-
-          .input-group {
-            display: grid;
-            gap: 6px;
-          }
-
-          .input-label {
-            font-size: 13px;
-            color: #365748;
-            font-weight: 600;
-          }
-
-          .input,
-          .file-input {
-            border: 1px solid rgba(41, 82, 66, 0.24);
-            border-radius: 12px;
-            padding: 12px;
-            font: inherit;
-            background: #ffffff;
-            color: #1f392f;
-          }
-
-          .file-input {
-            padding: 9px;
-          }
-
-          .full {
-            grid-column: 1 / -1;
-          }
-
-          .submit-row {
-            margin-top: 16px;
-            display: flex;
-            justify-content: flex-end;
-          }
-
-          @keyframes fade-up {
-            from {
-              opacity: 0;
-              transform: translateY(14px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-
-          @media (max-width: 700px) {
-            .create-page {
-              padding: 16px;
-            }
-
-            .create-card {
-              border-radius: 18px;
-              padding: 18px;
-            }
-
-            .form-grid {
-              grid-template-columns: 1fr;
-            }
-
-            .submit-row {
-              justify-content: stretch;
-            }
-
-            .submit-row .btn {
-              width: 100%;
-            }
-          }
-        `}
-      </style>
-
-      <div className="create-shell">
-        <section className="create-card">
-          <h1 className="create-title">Create Product</h1>
-          <p className="create-sub">
+    <div className="min-h-[100vh] p-[24px] font-sf-pro text-[#23372e] bg-[radial-gradient(circle_at_85%_12%,rgba(41,153,104,0.2),transparent_36%),radial-gradient(circle_at_8%_20%,rgba(255,191,92,0.2),transparent_34%),linear-gradient(150deg,#f7f3e6_0%,#edf4df_52%,#e0efe7_100%)]">
+      <div className="max-w-[980px] mx-auto grid gap-[14px] animate-[fade-up_550ms_ease-out]">
+        <section className="bg-white/78 border-[1px] border-[#274c3d]/18 rounded-[24px] p-[24px] shadow-[0_20px_40px_rgba(40,76,61,0.08)]">
+          <h1 className="m-0 mb-[8px] text-[30px] md:text-[4vw] lg:text-[48px] text-[#163629] font-bold">
+            Tạo sản phẩm
+          </h1>
+          <p className="m-0 text-[#3a5b4d] leading-[1.6]">
             Đăng ký sản phẩm mới, lưu thông tin xuất xứ và ảnh minh chứng lên hệ thống truy xuất nguồn gốc.
           </p>
 
-          <div className="wallet-pill">Wallet: {shortWallet}</div>
+          <div className="mt-[14px] w-fit rounded-[999px] border-[1px] border-[#204a39]/25 bg-[#f8fbf5] px-[12px] py-[8px] text-[13px] text-[#2a5443]">
+            Wallet: {shortWallet}
+          </div>
 
-          <div className="action-row">
-            <Link className="btn btn-secondary" to="/">
+          <div className="mt-[16px] flex flex-wrap gap-[10px]">
+            <Link className="inline-flex items-center justify-center rounded-[14px] px-[16px] py-[11px] text-[14px] transition-all duration-180 hover:-translate-y-[2px] border-[1px] border-[#22483a]/35 bg-[#f7efe0] text-[#2e5544] no-underline" to="/">
               Về trang chủ
             </Link>
             {!wallet && (
-              <button className="btn btn-secondary" type="button" onClick={connectWallet} disabled={isConnecting}>
+              <button className="inline-flex items-center justify-center rounded-[14px] px-[16px] py-[11px] text-[14px] font-semibold transition-all duration-180 hover:-translate-y-[2px] border-[1px] border-[#22483a]/35 bg-[#f7efe0] text-[#2e5544]" type="button" onClick={connectWallet} disabled={isConnecting}>
                 {isConnecting ? "Đang kết nối..." : "Connect Wallet"}
               </button>
             )}
           </div>
 
           <form onSubmit={handleSubmit}>
-            <div className="form-grid">
-              <label className="input-group">
-                <span className="input-label">Product Name</span>
+            <div className="mt-[20px] grid grid-cols-1 md:grid-cols-2 gap-[12px]">
+              <label className="grid gap-[6px]">
+                <span className="text-[13px] text-[#365748] font-semibold">Tên sản phẩm</span>
                 <input
-                  className="input"
+                  className="border-[1px] border-[#295242]/24 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f]"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="VD: Green Tea Leaves"
                 />
               </label>
 
-              <label className="input-group">
-                <span className="input-label">Origin</span>
+              <label className="grid gap-[6px]">
+                <span className="text-[13px] text-[#365748] font-semibold">Nguồn gốc</span>
                 <input
-                  className="input"
+                  className="border-[1px] border-[#295242]/24 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f]"
                   value={origin}
                   onChange={(e) => setOrigin(e.target.value)}
                   placeholder="VD: Lam Dong, Vietnam"
                 />
               </label>
 
-              <label className="input-group full">
-                <span className="input-label">Product Image</span>
-                <input
-                  className="file-input"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setImage(e.target.files?.[0] || null)}
-                />
-              </label>
+              <div className="grid gap-[6px] md:col-span-2">
+                <span className="text-[13px] text-[#365748] font-semibold">Hình ảnh sản phẩm</span>
+                <label
+                  className={`relative flex flex-col items-center justify-center border-[2px] border-dashed rounded-[18px] p-[28px] cursor-pointer transition-all duration-180 
+                ${image ? 'border-[#2a875f] bg-[#f0f9f4]' : 'border-[#295242]/30 bg-white/50 hover:bg-white/80 hover:border-[#2a875f]/50'}`}
+                  onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('bg-[#f0f9f4]', 'border-[#2a875f]'); }}
+                  onDragLeave={(e) => { e.preventDefault(); if (!image) e.currentTarget.classList.remove('bg-[#f0f9f4]', 'border-[#2a875f]'); }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const file = e.dataTransfer.files?.[0];
+                    if (file) setImage(file);
+                  }}
+                >
+                  <input
+                    className="hidden"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImage(e.target.files?.[0] || null)}
+                  />
+                  <div className="text-center">
+                    {image ? (
+                      <div className="flex flex-col items-center gap-[4px]">
+                        <span className="text-[#2a875f] font-bold text-[15px]">✓ Đã chọn file thành công</span>
+                        <span className="text-[#1f392f] text-[14px] break-all">{image.name}</span>
+                        <span className="text-[12px] text-[#3a5b4d] opacity-60">(Nhấp để thay đổi)</span>
+                      </div>
+                    ) : (
+                      <>
+                        <p className="m-0 text-[14px] text-[#1f392f] font-medium">Kéo thả ảnh vào đây hoặc nhấp để chọn</p>
+                        <p className="mt-[4px] mb-0 text-[12px] text-[#3a5b4d] opacity-70">Hỗ trợ: JPG, PNG, WEBP</p>
+                      </>
+                    )}
+                  </div>
+                </label>
+              </div>
             </div>
 
-            <div className="status-box">{status}</div>
+            <div className="mt-[14px] rounded-[14px] border-[1px] border-[#d8e7dd] bg-[#f6fbf8] p-[12px] text-[#32594b] text-[14px]">
+              {status}
+            </div>
 
-            <div className="submit-row">
-              <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Đang tạo..." : "Create Product"}
+            <div className="mt-[16px] flex justify-end">
+              <button
+                className="w-full md:w-fit inline-flex items-center justify-center rounded-[14px] px-[16px] py-[11px] text-[14px] cursor-pointer transition-all duration-180 hover:-translate-y-[2px] bg-gradient-to-br from-[#2a875f] to-[#1f6648] text-[#effff6] shadow-[0_12px_20px_rgba(31,102,72,0.23)] disabled:opacity-70"
+                type="submit"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Đang tạo..." : "Tạo sản phẩm"}
               </button>
             </div>
           </form>
