@@ -61,380 +61,72 @@ export default function Product() {
   };
 
   return (
-    <div className="product-page">
-      <style>
-        {`
-          @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap');
+    <div className="min-h-[100vh] p-[24px] font-sf-pro text-[#20342b] overflow-x-hidden bg-[radial-gradient(circle_at_12%_14%,rgba(255,184,91,0.2),transparent_34%),radial-gradient(circle_at_88%_10%,rgba(46,143,106,0.22),transparent_35%),linear-gradient(155deg,#f7f3e9_0%,#eef5e2_53%,#e0efe5_100%)]">
+      <div className="max-w-[1080px] mx-auto grid gap-[16px] animate-[fade-up_600ms_ease-out]">
 
-          .product-page {
-            min-height: 100vh;
-            padding: 24px;
-            background:
-              radial-gradient(circle at 12% 14%, rgba(255, 184, 91, 0.2), transparent 34%),
-              radial-gradient(circle at 88% 10%, rgba(46, 143, 106, 0.22), transparent 35%),
-              linear-gradient(155deg, #f7f3e9 0%, #eef5e2 53%, #e0efe5 100%);
-            color: #20342b;
-            font-family: "Space Grotesk", sans-serif;
-          }
-
-          .product-shell {
-            max-width: 1080px;
-            margin: 0 auto;
-            display: grid;
-            gap: 16px;
-            animation: fade-up 600ms ease-out;
-          }
-
-          .top-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
-          }
-
-          .title {
-            margin: 0;
-            font-size: clamp(30px, 4vw, 48px);
-            line-height: 1.08;
-            font-family: "Fraunces", serif;
-          }
-
-          .id-tag {
-            border-radius: 999px;
-            padding: 8px 12px;
-            border: 1px solid rgba(31, 68, 54, 0.28);
-            background: rgba(255, 255, 255, 0.72);
-            font-size: 13px;
-            color: #2f5647;
-          }
-
-          .btn-link {
-            border-radius: 12px;
-            padding: 10px 14px;
-            text-decoration: none;
-            border: 1px solid rgba(31, 67, 54, 0.35);
-            background: #f8f0e3;
-            color: #274c3d;
-            font-weight: 600;
-            transition: transform 0.18s ease;
-          }
-
-          .btn-link:hover {
-            transform: translateY(-2px);
-          }
-
-          .grid {
-            display: grid;
-            gap: 14px;
-            grid-template-columns: 0.95fr 1.05fr;
-          }
-
-          .card {
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(38, 73, 58, 0.16);
-            border-radius: 22px;
-            padding: 20px;
-            box-shadow: 0 20px 38px rgba(39, 73, 58, 0.08);
-          }
-
-          .kv {
-            display: grid;
-            gap: 10px;
-          }
-
-          .kv-item {
-            border-radius: 12px;
-            background: #f6fbf7;
-            border: 1px solid #d6e8de;
-            padding: 10px 12px;
-          }
-
-          .kv-label {
-            margin: 0;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: #5a7d6d;
-          }
-
-          .kv-value {
-            margin: 4px 0 0;
-            font-size: 18px;
-            font-weight: 600;
-            color: #1f3d32;
-            word-break: break-all;
-          }
-
-          .loading,
-          .error,
-          .empty {
-            border-radius: 16px;
-            padding: 12px;
-            border: 1px solid #d6e8de;
-            background: #f6fbf7;
-            color: #355f4f;
-          }
-
-          .error {
-            border-color: #ebc8c8;
-            background: #fff5f5;
-            color: #7a3737;
-          }
-
-          .timeline {
-            display: grid;
-            gap: 10px;
-          }
-
-          .timeline-item {
-            border-radius: 14px;
-            border: 1px solid rgba(39, 74, 59, 0.16);
-            background: #ffffff;
-            padding: 12px;
-            animation: pop-in 460ms ease-out;
-          }
-
-          .timeline-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            flex-wrap: wrap;
-          }
-
-          .status-pill {
-            border-radius: 999px;
-            padding: 5px 10px;
-            background: #ecf8f1;
-            color: #246144;
-            border: 1px solid #cae8d7;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-          }
-
-          .timeline-body {
-            margin-top: 10px;
-            display: grid;
-            gap: 8px;
-          }
-
-          .preview {
-            width: 100%;
-            max-height: 220px;
-            object-fit: cover;
-            border-radius: 10px;
-            border: 1px solid #dbeadf;
-          }
-
-          .mono {
-            margin: 0;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-            font-size: 12px;
-            line-height: 1.5;
-            word-break: break-all;
-            color: #305848;
-          }
-
-          .qr-card {
-            margin-top: 14px;
-            border: 1px dashed rgba(39, 74, 59, 0.32);
-            border-radius: 16px;
-            padding: 14px;
-            background: #fbfffc;
-            display: grid;
-            gap: 10px;
-          }
-
-          .qr-head {
-            margin: 0;
-            font-size: 16px;
-            color: #204031;
-          }
-
-          .qr-sub {
-            margin: 0;
-            font-size: 13px;
-            color: #456859;
-          }
-
-          .qr-layout {
-            display: grid;
-            grid-template-columns: minmax(96px, 120px) minmax(0, 1fr);
-            gap: 12px;
-            align-items: start;
-          }
-
-          .qr-box {
-            background: #ffffff;
-            border: 1px solid #d4e7dc;
-            border-radius: 12px;
-            padding: 10px;
-            width: 100%;
-            max-width: 120px;
-            aspect-ratio: 1 / 1;
-            box-sizing: border-box;
-            display: grid;
-            place-items: center;
-          }
-
-          .qr-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-          }
-
-          .qr-url {
-            margin: 0;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-            font-size: 12px;
-            color: #2d5646;
-            word-break: break-all;
-          }
-
-          .qr-details {
-            min-width: 0;
-          }
-
-          .qr-actions {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 8px;
-            margin-top: 8px;
-          }
-
-          .qr-btn {
-            border: 1px solid rgba(31, 67, 54, 0.35);
-            background: #f8f0e3;
-            color: #274c3d;
-            border-radius: 10px;
-            padding: 8px 12px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            white-space: normal;
-            text-align: center;
-            width: 100%;
-            box-sizing: border-box;
-          }
-
-          @keyframes fade-up {
-            from {
-              opacity: 0;
-              transform: translateY(14px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-
-          @keyframes pop-in {
-            from {
-              opacity: 0;
-              transform: translateY(8px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-
-          @media (max-width: 920px) {
-            .grid {
-              grid-template-columns: 1fr;
-            }
-
-            .qr-layout {
-              grid-template-columns: 1fr;
-            }
-
-            .qr-box {
-              max-width: 140px;
-            }
-          }
-
-          @media (max-width: 740px) {
-            .qr-actions {
-              grid-template-columns: 1fr;
-            }
-          }
-
-          @media (max-width: 560px) {
-            .product-page {
-              padding: 16px;
-            }
-
-            .card {
-              border-radius: 18px;
-              padding: 16px;
-            }
-          }
-        `}
-      </style>
-
-      <div className="product-shell">
-        <div className="top-row">
-          <h1 className="title">Product Trace</h1>
-          <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-            <span className="id-tag">Product ID: #{id}</span>
-            <Link className="btn-link" to="/">
+        {/* Top Row */}
+        <div className="flex items-center justify-between gap-[12px] flex-wrap">
+          <h1 className="m-0 text-[30px] md:text-[4vw] lg:text-[48px] leading-[1.08] font-bold">
+            Thông tin sản phẩm
+          </h1>
+          <div className="flex items-center gap-[10px] flex-wrap">
+            <span className="rounded-[999px] px-[12px] py-[8px] border-[1px] border-[#1f4436]/28 bg-white/72 text-[13px] text-[#2f5647]">
+              Product ID: #{id}
+            </span>
+            <Link className="rounded-full px-[14px] py-8 text-[13px] no-underline border-[1px] border-[#1f4336]/35 bg-[#f8f0e3] text-[#274c3d] transition-transform duration-180 hover:-translate-y-[2px]" to="/">
               Về trang chủ
             </Link>
-            <Link className="btn-link" to={`/update/${id}`}>
+            <Link className="rounded-full px-[14px] py-8 text-[13px] no-underline border-[1px] border-[#1f4336]/35 bg-[#f8f0e3] text-[#274c3d] transition-transform duration-180 hover:-translate-y-[2px]" to={`/update/${id}`}>
               Cập nhật sản phẩm
             </Link>
-            <Link className="btn-link" to="/create">
-              Tạo sản phẩm mới
+            <Link className="rounded-full px-[14px] py-8 text-[13px] no-underline border-[1px] border-[#1f4336]/35 bg-[#f8f0e3] text-[#274c3d] transition-transform duration-180 hover:-translate-y-[2px]" to="/create">
+              Tao sản phẩm mới
             </Link>
           </div>
         </div>
 
-        {loading && <div className="loading">Đang tải thông tin sản phẩm...</div>}
-        {error && !loading && <div className="error">{error}</div>}
+        {loading && <div className="rounded-[16px] p-[12px] border-[1px] border-[#d6e8de] bg-[#f6fbf7] text-[#355f4f]">Đang tải thông tin sản phẩm...</div>}
+        {error && !loading && <div className="rounded-[16px] p-[12px] border-[1px] border-[#ebc8c8] bg-[#fff5f5] text-[#7a3737]">{error}</div>}
 
         {!loading && !error && data && (
-          <section className="grid">
-            <article className="card">
-              <h2 style={{ marginTop: 0 }}>Thông tin chung</h2>
-              <div className="kv">
-                <div className="kv-item">
-                  <p className="kv-label">Name</p>
-                  <p className="kv-value">{data.product?.name || "N/A"}</p>
+          <section className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-[14px]">
+
+            {/* Left Column: General Info & QR */}
+            <article className="bg-white/80 border-[1px] border-[#26493a]/16 rounded-[22px] p-[20px] shadow-[0_20px_38px_rgba(39,73,58,0.08)]">
+              <h2 className="mt-0 text-[24px] font-bold mb-[16px]">Thông tin chung</h2>
+              <div className="grid gap-[10px]">
+                <div className="rounded-[12px] bg-[#f6fbf7] border-[1px] border-[#d6e8de] px-[12px] py-[10px]">
+                  <p className="m-0 text-[12px] uppercase tracking-[0.08em] text-[#5a7d6d]">Tên sản phẩm</p>
+                  <p className="m-[4px_0_0] text-[18px] font-semibold text-[#1f3d32] break-all">{data.product?.name || "N/A"}</p>
                 </div>
-                <div className="kv-item">
-                  <p className="kv-label">Origin</p>
-                  <p className="kv-value">{data.product?.origin || "N/A"}</p>
+                <div className="rounded-[12px] bg-[#f6fbf7] border-[1px] border-[#d6e8de] px-[12px] py-[10px]">
+                  <p className="m-0 text-[12px] uppercase tracking-[0.08em] text-[#5a7d6d]">Nguồn gốc</p>
+                  <p className="m-[4px_0_0] text-[18px] font-semibold text-[#1f3d32] break-all">{data.product?.origin || "N/A"}</p>
                 </div>
-                <div className="kv-item">
-                  <p className="kv-label">Latest Status</p>
-                  <p className="kv-value">{latestVersion?.status || "N/A"}</p>
+                <div className="rounded-[12px] bg-[#f6fbf7] border-[1px] border-[#d6e8de] px-[12px] py-[10px]">
+                  <p className="m-0 text-[12px] uppercase tracking-[0.08em] text-[#5a7d6d]">Trạng thái cuối cùng</p>
+                  <p className="m-[4px_0_0] text-[18px] font-semibold text-[#1f3d32] break-all">{latestVersion?.status || "N/A"}</p>
                 </div>
               </div>
 
-              <section className="qr-card">
-                <h3 className="qr-head">QR Truy Xuất Nguồn Gốc</h3>
-                <p className="qr-sub">In mã này và dán lên sản phẩm. Người dùng quét sẽ mở trang thông tin chi tiết.</p>
+              {/* QR Section */}
+              <section className="mt-[14px] border-[1px] border-dashed border-[#274a3b]/32 rounded-[16px] p-[14px] bg-[#fbfffc] grid gap-[10px]">
+                <h3 className="m-0 text-[16px] text-[#204031] font-bold">QR Truy Xuất Nguồn Gốc</h3>
+                <p className="m-0 text-[13px] text-[#456859]">In mã này và dán lên sản phẩm. Người dùng quét sẽ mở trang thông tin chi tiết.</p>
 
-                <div className="qr-layout">
-                  <div className="qr-box">
-                    {qrImageUrl && <img className="qr-image" src={qrImageUrl} alt={`QR truy xuất sản phẩm ${id}`} />}
+                <div className="grid grid-cols-1 sm:grid-cols-[minmax(96px,120px)_minmax(0,1fr)] gap-[12px] items-start">
+                  <div className="bg-white border-[1px] border-[#d4e7dc] rounded-[12px] p-[10px] w-full max-w-[120px] aspect-square flex items-center justify-center">
+                    {qrImageUrl && <img className="w-full h-full object-contain block" src={qrImageUrl} alt={`QR truy xuất sản phẩm ${id}`} />}
                   </div>
 
-                  <div className="qr-details">
-                    <p className="qr-url">{traceUrl}</p>
-                    <div className="qr-actions">
-                      <button className="qr-btn" type="button" onClick={downloadQr}>
+                  <div className="min-w-0">
+                    <p className="m-0 font-mono text-[12px] text-[#2d5646] break-all">{traceUrl}</p>
+                    <div className="grid grid-cols-2 gap-[8px] mt-[8px]">
+                      <button className="border-[1px] border-[#1f4336]/35 bg-[#f8f0e3] text-[#274c3d] rounded-[10px] px-[12px] py-[8px] text-[13px] cursor-pointer text-center" type="button" onClick={downloadQr}>
                         Tải QR
                       </button>
-                      <a className="qr-btn" href={traceUrl} target="_blank" rel="noreferrer">
-                        Mở Link Truy Xuất
+                      <a className="border-[1px] border-[#1f4336]/35 bg-[#f8f0e3] text-[#274c3d] rounded-[10px] px-[12px] py-[8px] text-[13px] no-underline text-center" href={traceUrl} target="_blank" rel="noreferrer">
+                        Mở Link
                       </a>
                     </div>
                   </div>
@@ -442,37 +134,40 @@ export default function Product() {
               </section>
             </article>
 
-            <article className="card">
-              <h2 style={{ marginTop: 0 }}>Lịch sử phiên bản</h2>
+            {/* Right Column: Version History */}
+            <article className="bg-white/80 border-[1px] border-[#26493a]/16 rounded-[22px] p-[20px] shadow-[0_20px_38px_rgba(39,73,58,0.08)]">
+              <h2 className="mt-0 text-[24px] font-bold mb-[16px]">Lịch sử phiên bản</h2>
 
               {!data.versions?.length ? (
-                <div className="empty">Chưa có phiên bản nào cho sản phẩm này.</div>
+                <div className="rounded-[16px] p-[12px] border-[1px] border-[#d6e8de] bg-[#f6fbf7] text-[#355f4f]">Chưa có phiên bản nào.</div>
               ) : (
-                <div className="timeline">
+                <div className="grid gap-[10px]">
                   {data.versions.map((version) => (
-                    <div className="timeline-item" key={version.version}>
-                      <div className="timeline-head">
-                        <strong>Version {version.version}</strong>
-                        <span className="status-pill">{version.status}</span>
+                    <div className="rounded-[14px] border-[1px] border-[#274a3b]/16 bg-white p-[12px] animate-[pop-in_460ms_ease-out]" key={version.version}>
+                      <div className="flex items-center justify-between gap-[10px] flex-wrap">
+                        <strong className="text-[16px]">Version {version.version}</strong>
+                        <span className="rounded-[999px] px-[10px] py-[5px] bg-[#ecf8f1] text-[#246144] border-[1px] border-[#cae8d7] text-[12px] font-bold tracking-[0.04em]">
+                          {version.status}
+                        </span>
                       </div>
 
-                      <div className="timeline-body">
+                      <div className="mt-[10px] grid gap-[8px]">
                         {version.image && (
                           <img
-                            className="preview"
+                            className="w-full max-h-[220px] object-cover rounded-[10px] border-[1px] border-[#dbeadf]"
                             src={toImageUrl(version.image)}
                             alt={`Product version ${version.version}`}
                           />
                         )}
-                        <p className="mono">Hash: {version.hash}</p>
-                        <p className="mono">Tx: {version.tx_hash}</p>
+                        <p className="m-0 font-mono text-[12px] leading-[1.5] break-all text-[#305848]">Hash: {version.hash}</p>
+                        <p className="m-0 font-mono text-[12px] leading-[1.5] break-all text-[#305848]">Tx: {version.tx_hash}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               )}
-
             </article>
+
           </section>
         )}
       </div>
