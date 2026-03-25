@@ -7,13 +7,16 @@ import {
   subscribeWalletChanges,
   WALLET_STORAGE_KEY,
 } from "../../services/wallet.service";
+import axios from "axios";
 
 export default function Create() {
   const [name, setName] = useState("");
   const [origin, setOrigin] = useState("");
   const [image, setImage] = useState(null);
   const [wallet, setWallet] = useState("");
-  const [status, setStatus] = useState("Điền thông tin và kết nối ví để tạo sản phẩm.");
+  const [status, setStatus] = useState(
+    "Điền thông tin và kết nối ví để tạo sản phẩm.",
+  );
   const [isConnecting, setIsConnecting] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -68,7 +71,9 @@ export default function Create() {
       } else {
         setWallet("");
         localStorage.removeItem(WALLET_STORAGE_KEY);
-        setStatus("MetaMask đã ngắt kết nối. Vui lòng kết nối lại để tiếp tục.");
+        setStatus(
+          "MetaMask đã ngắt kết nối. Vui lòng kết nối lại để tiếp tục.",
+        );
       }
     });
 
@@ -102,11 +107,15 @@ export default function Create() {
       setIsSubmitting(true);
       setStatus("Đang tạo sản phẩm và ghi dữ liệu lên blockchain...");
 
-      await API.post("/create/", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/create/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         },
-      });
+      );
 
       setStatus("Tạo sản phẩm thành công.");
       setName("");
@@ -114,9 +123,15 @@ export default function Create() {
       setImage(null);
     } catch (error) {
       if (!error?.response) {
-        setStatus("Không kết nối được backend. Hãy chạy Django server và thử lại.");
+        setStatus(
+          "Không kết nối được backend. Hãy chạy Django server và thử lại.",
+        );
       } else {
-        setStatus(error?.response?.data?.detail || error?.message || "Tạo sản phẩm thất bại.");
+        setStatus(
+          error?.response?.data?.detail ||
+            error?.message ||
+            "Tạo sản phẩm thất bại.",
+        );
       }
     } finally {
       setIsSubmitting(false);
@@ -131,7 +146,8 @@ export default function Create() {
             Tạo sản phẩm
           </h1>
           <p className="m-0 text-[#3a5b4d] leading-[1.6]">
-            Đăng ký sản phẩm mới, lưu thông tin xuất xứ và ảnh minh chứng lên hệ thống truy xuất nguồn gốc.
+            Đăng ký sản phẩm mới, lưu thông tin xuất xứ và ảnh minh chứng lên hệ
+            thống truy xuất nguồn gốc.
           </p>
 
           <div className="mt-[14px] w-fit rounded-[999px] border-[1px] border-[#204a39]/25 bg-[#f8fbf5] px-[12px] py-[8px] text-[13px] text-[#2a5443]">
@@ -139,11 +155,19 @@ export default function Create() {
           </div>
 
           <div className="mt-[16px] flex flex-wrap gap-[10px]">
-            <Link className="inline-flex items-center justify-center rounded-[14px] px-[16px] py-[11px] text-[14px] transition-all duration-180 hover:-translate-y-[2px] border-[1px] border-[#22483a]/35 bg-[#f7efe0] text-[#2e5544] no-underline" to="/">
+            <Link
+              className="inline-flex items-center justify-center rounded-[14px] px-[16px] py-[11px] text-[14px] transition-all duration-180 hover:-translate-y-[2px] border-[1px] border-[#22483a]/35 bg-[#f7efe0] text-[#2e5544] no-underline"
+              to="/"
+            >
               Về trang chủ
             </Link>
             {!wallet && (
-              <button className="inline-flex items-center justify-center rounded-[14px] px-[16px] py-[11px] text-[14px] font-semibold transition-all duration-180 hover:-translate-y-[2px] border-[1px] border-[#22483a]/35 bg-[#f7efe0] text-[#2e5544]" type="button" onClick={connectWallet} disabled={isConnecting}>
+              <button
+                className="inline-flex items-center justify-center rounded-[14px] px-[16px] py-[11px] text-[14px] font-semibold transition-all duration-180 hover:-translate-y-[2px] border-[1px] border-[#22483a]/35 bg-[#f7efe0] text-[#2e5544]"
+                type="button"
+                onClick={connectWallet}
+                disabled={isConnecting}
+              >
                 {isConnecting ? "Đang kết nối..." : "Connect Wallet"}
               </button>
             )}
@@ -152,7 +176,9 @@ export default function Create() {
           <form onSubmit={handleSubmit}>
             <div className="mt-[20px] grid grid-cols-1 md:grid-cols-2 gap-[12px]">
               <label className="grid gap-[6px]">
-                <span className="text-[13px] text-[#365748] font-semibold">Tên sản phẩm</span>
+                <span className="text-[13px] text-[#365748] font-semibold">
+                  Tên sản phẩm
+                </span>
                 <input
                   className="border-[1px] border-[#295242]/24 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f]"
                   value={name}
@@ -162,7 +188,9 @@ export default function Create() {
               </label>
 
               <label className="grid gap-[6px]">
-                <span className="text-[13px] text-[#365748] font-semibold">Nguồn gốc</span>
+                <span className="text-[13px] text-[#365748] font-semibold">
+                  Nguồn gốc
+                </span>
                 <input
                   className="border-[1px] border-[#295242]/24 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f]"
                   value={origin}
@@ -172,12 +200,27 @@ export default function Create() {
               </label>
 
               <div className="grid gap-[6px] md:col-span-2">
-                <span className="text-[13px] text-[#365748] font-semibold">Hình ảnh sản phẩm</span>
+                <span className="text-[13px] text-[#365748] font-semibold">
+                  Hình ảnh sản phẩm
+                </span>
                 <label
                   className={`relative flex flex-col items-center justify-center border-[2px] border-dashed rounded-[18px] p-[28px] cursor-pointer transition-all duration-180 
-                ${image ? 'border-[#2a875f] bg-[#f0f9f4]' : 'border-[#295242]/30 bg-white/50 hover:bg-white/80 hover:border-[#2a875f]/50'}`}
-                  onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('bg-[#f0f9f4]', 'border-[#2a875f]'); }}
-                  onDragLeave={(e) => { e.preventDefault(); if (!image) e.currentTarget.classList.remove('bg-[#f0f9f4]', 'border-[#2a875f]'); }}
+                ${image ? "border-[#2a875f] bg-[#f0f9f4]" : "border-[#295242]/30 bg-white/50 hover:bg-white/80 hover:border-[#2a875f]/50"}`}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.currentTarget.classList.add(
+                      "bg-[#f0f9f4]",
+                      "border-[#2a875f]",
+                    );
+                  }}
+                  onDragLeave={(e) => {
+                    e.preventDefault();
+                    if (!image)
+                      e.currentTarget.classList.remove(
+                        "bg-[#f0f9f4]",
+                        "border-[#2a875f]",
+                      );
+                  }}
                   onDrop={(e) => {
                     e.preventDefault();
                     const file = e.dataTransfer.files?.[0];
@@ -193,14 +236,24 @@ export default function Create() {
                   <div className="text-center">
                     {image ? (
                       <div className="flex flex-col items-center gap-[4px]">
-                        <span className="text-[#2a875f] font-bold text-[15px]">✓ Đã chọn file thành công</span>
-                        <span className="text-[#1f392f] text-[14px] break-all">{image.name}</span>
-                        <span className="text-[12px] text-[#3a5b4d] opacity-60">(Nhấp để thay đổi)</span>
+                        <span className="text-[#2a875f] font-bold text-[15px]">
+                          ✓ Đã chọn file thành công
+                        </span>
+                        <span className="text-[#1f392f] text-[14px] break-all">
+                          {image.name}
+                        </span>
+                        <span className="text-[12px] text-[#3a5b4d] opacity-60">
+                          (Nhấp để thay đổi)
+                        </span>
                       </div>
                     ) : (
                       <>
-                        <p className="m-0 text-[14px] text-[#1f392f] font-medium">Kéo thả ảnh vào đây hoặc nhấp để chọn</p>
-                        <p className="mt-[4px] mb-0 text-[12px] text-[#3a5b4d] opacity-70">Hỗ trợ: JPG, PNG, WEBP</p>
+                        <p className="m-0 text-[14px] text-[#1f392f] font-medium">
+                          Kéo thả ảnh vào đây hoặc nhấp để chọn
+                        </p>
+                        <p className="mt-[4px] mb-0 text-[12px] text-[#3a5b4d] opacity-70">
+                          Hỗ trợ: JPG, PNG, WEBP
+                        </p>
                       </>
                     )}
                   </div>

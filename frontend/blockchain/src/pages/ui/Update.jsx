@@ -1,15 +1,22 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import API from "../../services/api.service";
+import axios from "axios";
 
-const STATUS_OPTIONS = ["PLANTED", "HARVESTED", "PACKAGED", "SHIPPED", "DELIVERED", "SOLD"];
+const STATUS_OPTIONS = [
+  { value: "PLANTED", label: "Đã trồng" },
+  { value: "HARVESTED", label: "Đã thu hoạch" },
+  { value: "PACKAGED", label: "Đã đóng gói" },
+  { value: "SHIPPED", label: "Đã vận chuyển" },
+  { value: "DELIVERED", label: "Đã giao hàng" },
+  { value: "SOLD", label: "Đã bán" }
+];
 
 export default function Update() {
   const { id: routeId } = useParams();
   const navigate = useNavigate();
 
   const [productId, setProductId] = useState(routeId || "");
-  const [status, setStatus] = useState(STATUS_OPTIONS[0]);
+  const [status, setStatus] = useState(STATUS_OPTIONS[0].value);
   const [image, setImage] = useState(null);
   const [message, setMessage] = useState("Nhập thông tin cập nhật và tải ảnh mới cho phiên bản tiếp theo.");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,7 +48,7 @@ export default function Update() {
       setIsSubmitting(true);
       setMessage("Đang cập nhật sản phẩm lên hệ thống...");
 
-      await API.post("/update/", formData, {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/update/`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -99,8 +106,8 @@ export default function Update() {
                   onChange={(event) => setStatus(event.target.value)}
                 >
                   {STATUS_OPTIONS.map((item) => (
-                    <option key={item} value={item}>
-                      {item}
+                    <option key={item.value} value={item.value}>
+                      {item.label}
                     </option>
                   ))}
                 </select>

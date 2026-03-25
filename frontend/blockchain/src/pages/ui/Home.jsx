@@ -7,6 +7,7 @@ import {
   subscribeWalletChanges,
   WALLET_STORAGE_KEY,
 } from "../../services/wallet.service";
+import axios from "axios";
 
 export default function Home() {
   const [wallet, setWallet] = useState("");
@@ -97,7 +98,7 @@ export default function Home() {
       try {
         setIsLoadingProducts(true);
         setProductsError("");
-        const response = await API.get("/products/", {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/products/`, {
           params: { wallet },
         });
         setProducts(response.data || []);

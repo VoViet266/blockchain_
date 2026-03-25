@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import API from "../../services/api.service";
+import axios from "axios";
 
 export default function Product() {
   const { id } = useParams();
@@ -18,7 +18,18 @@ export default function Product() {
     if (typeof window === "undefined") return `/product/${id}`;
     return `${window.location.origin}/product/${id}`;
   }, [id]);
-
+  const status = {
+   "PLANTED": "Đã trồng",
+   "HARVESTED": "Đã thu hoạch",
+   "PROCESSED": "Đã chế biến",
+   "PACKAGED": "Đã đóng gói",
+   "SHIPPED": "Đã vận chuyển",
+   "DELIVERED": "Đã giao hàng",
+   "RETURNED": "Đã trả lại",
+   "EXPIRED": "Đã hết hạn",
+   "DAMAGED": "Đã hư hỏng",
+   "SOLD": "Đã bán"
+  }
   const qrImageUrl = useMemo(() => {
     if (!traceUrl) return "";
     return `https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=${encodeURIComponent(traceUrl)}`;
@@ -29,8 +40,7 @@ export default function Product() {
       try {
         setLoading(true);
         setError("");
-
-        const response = await API.get(`/product/${id}/`);
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/product/${id}/`);
         setData(response.data);
       } catch (fetchError) {
         setError(fetchError?.response?.data?.detail || "Không thể tải thông tin sản phẩm.");
@@ -38,7 +48,7 @@ export default function Product() {
         setLoading(false);
       }
     };
-
+    
     fetchProduct();
   }, [id]);
 
@@ -97,15 +107,15 @@ export default function Product() {
               <div className="grid gap-[10px]">
                 <div className="rounded-[12px] bg-[#f6fbf7] border-[1px] border-[#d6e8de] px-[12px] py-[10px]">
                   <p className="m-0 text-[12px] uppercase tracking-[0.08em] text-[#5a7d6d]">Tên sản phẩm</p>
-                  <p className="m-[4px_0_0] text-[18px] font-semibold text-[#1f3d32] break-all">{data.product?.name || "N/A"}</p>
+                  <p className="m-[4px_0_0] text-[18px] font-semibold text-[#1f3d32] break-all">{data.name || "N/A"}</p>
                 </div>
                 <div className="rounded-[12px] bg-[#f6fbf7] border-[1px] border-[#d6e8de] px-[12px] py-[10px]">
                   <p className="m-0 text-[12px] uppercase tracking-[0.08em] text-[#5a7d6d]">Nguồn gốc</p>
-                  <p className="m-[4px_0_0] text-[18px] font-semibold text-[#1f3d32] break-all">{data.product?.origin || "N/A"}</p>
+                  <p className="m-[4px_0_0] text-[18px] font-semibold text-[#1f3d32] break-all">{data.origin || "N/A"}</p>
                 </div>
                 <div className="rounded-[12px] bg-[#f6fbf7] border-[1px] border-[#d6e8de] px-[12px] py-[10px]">
                   <p className="m-0 text-[12px] uppercase tracking-[0.08em] text-[#5a7d6d]">Trạng thái cuối cùng</p>
-                  <p className="m-[4px_0_0] text-[18px] font-semibold text-[#1f3d32] break-all">{latestVersion?.status || "N/A"}</p>
+                  <p className="m-[4px_0_0] text-[18px] font-semibold text-[#1f3d32] break-all">{status[latestVersion?.status] || "N/A"}</p>
                 </div>
               </div>
 
@@ -137,7 +147,6 @@ export default function Product() {
             {/* Right Column: Version History */}
             <article className="bg-white/80 border-[1px] border-[#26493a]/16 rounded-[22px] p-[20px] shadow-[0_20px_38px_rgba(39,73,58,0.08)]">
               <h2 className="mt-0 text-[24px] font-bold mb-[16px]">Lịch sử phiên bản</h2>
-
               {!data.versions?.length ? (
                 <div className="rounded-[16px] p-[12px] border-[1px] border-[#d6e8de] bg-[#f6fbf7] text-[#355f4f]">Chưa có phiên bản nào.</div>
               ) : (
@@ -154,7 +163,7 @@ export default function Product() {
                       <div className="mt-[10px] grid gap-[8px]">
                         {version.image && (
                           <img
-                            className="w-full max-h-[220px] object-cover rounded-[10px] border-[1px] border-[#dbeadf]"
+                            className="w-full max-h-[320px] object-cover rounded-[10px] border-[1px] border-[#dbeadf]"
                             src={toImageUrl(version.image)}
                             alt={`Product version ${version.version}`}
                           />
