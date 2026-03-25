@@ -135,9 +135,6 @@ export default function Product() {
                       <button className="border-[1px] border-[#1f4336]/35 bg-[#f8f0e3] text-[#274c3d] rounded-[10px] px-[12px] py-[8px] text-[13px] cursor-pointer text-center" type="button" onClick={downloadQr}>
                         Tải QR
                       </button>
-                      <a className="border-[1px] border-[#1f4336]/35 bg-[#f8f0e3] text-[#274c3d] rounded-[10px] px-[12px] py-[8px] text-[13px] no-underline text-center" href={traceUrl} target="_blank" rel="noreferrer">
-                        Mở Link
-                      </a>
                     </div>
                   </div>
                 </div>
