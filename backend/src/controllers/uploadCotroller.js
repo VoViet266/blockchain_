@@ -2,7 +2,7 @@ require('dotenv').config();
 import pinataService from '../services/pinata.service.js';
 const uploadImage = async (req, res) => {
     try {
-        // 1. Kiểm tra xem người dùng có gửi file lên không
+
         if (!req.file) {
             return res.status(400).json({
                 success: false,

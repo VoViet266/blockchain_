@@ -17,7 +17,6 @@ app.use('/api', routes);
 // Phục vụ các file tĩnh cho media/products
 app.use('/media', express.static(path.join(process.cwd(), 'media')));
 
-// Kết nối DB và Blockchain
 syncDatabase();
 initBlockchain();
 

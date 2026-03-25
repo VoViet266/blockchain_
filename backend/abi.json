@@ -1,12 +1,37 @@
 [
     {
+        "inputs": [],
+        "name": "InvalidOwnerAddress",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "InvalidProductId",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NotProductOwner",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "ProductAlreadyExists",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "ProductNotFound",
+        "type": "error"
+    },
+    {
         "anonymous": false,
         "inputs": [
             {
                 "indexed": false,
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
+                "internalType": "string",
+                "name": "uuid",
+                "type": "string"
             },
             {
                 "indexed": false,
@@ -29,9 +54,9 @@
         "inputs": [
             {
                 "indexed": false,
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
+                "internalType": "string",
+                "name": "uuid",
+                "type": "string"
             },
             {
                 "indexed": false,
@@ -54,9 +79,9 @@
         "inputs": [
             {
                 "indexed": false,
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
+                "internalType": "string",
+                "name": "uuid",
+                "type": "string"
             },
             {
                 "indexed": false,
@@ -71,9 +96,9 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "_id",
-                "type": "uint256"
+                "internalType": "string",
+                "name": "_uuid",
+                "type": "string"
             },
             {
                 "internalType": "string",
@@ -89,17 +114,17 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "_id",
-                "type": "uint256"
+                "internalType": "string",
+                "name": "_uuid",
+                "type": "string"
             }
         ],
         "name": "getProduct",
         "outputs": [
             {
-                "internalType": "uint256",
+                "internalType": "string",
                 "name": "",
-                "type": "uint256"
+                "type": "string"
             },
             {
                 "internalType": "address",
@@ -123,9 +148,9 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "_id",
-                "type": "uint256"
+                "internalType": "string",
+                "name": "_uuid",
+                "type": "string"
             }
         ],
         "name": "productExistsCheck",
@@ -142,9 +167,9 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "_id",
-                "type": "uint256"
+                "internalType": "string",
+                "name": "_uuid",
+                "type": "string"
             },
             {
                 "internalType": "address",
@@ -160,9 +185,9 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "_id",
-                "type": "uint256"
+                "internalType": "string",
+                "name": "_uuid",
+                "type": "string"
             },
             {
                 "internalType": "string",
