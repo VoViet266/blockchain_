@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
-export default function Product() {
+export default function ProductScanByUser() {
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,7 +16,7 @@ export default function Product() {
   const traceUrl = useMemo(() => {
     if (!id) return "";
     if (typeof window === "undefined") return `/product/${id}`;
-    return `${window.location.origin}/product/${id}`;
+    return `${window.location.origin}/product-scan-by-user/${id}`;
   }, [id]);
   const status = {
    "PLANTED": "Đã trồng",
@@ -83,15 +83,6 @@ export default function Product() {
             <span className="rounded-[999px] px-[12px] py-[8px] border-[1px] border-[#1f4436]/28 bg-white/72 text-[13px] text-[#2f5647]">
               Mã sản phẩm: #{id}
             </span>
-            <Link className="rounded-full px-[14px] py-8 text-[13px] no-underline border-[1px] border-[#1f4336]/35 bg-[#f8f0e3] text-[#274c3d] transition-transform duration-180 hover:-translate-y-[2px]" to="/">
-              Về trang chủ
-            </Link>
-            <Link className="rounded-full px-[14px] py-8 text-[13px] no-underline border-[1px] border-[#1f4336]/35 bg-[#f8f0e3] text-[#274c3d] transition-transform duration-180 hover:-translate-y-[2px]" to={`/update/${id}`}>
-              Cập nhật sản phẩm
-            </Link>
-            <Link className="rounded-full px-[14px] py-8 text-[13px] no-underline border-[1px] border-[#1f4336]/35 bg-[#f8f0e3] text-[#274c3d] transition-transform duration-180 hover:-translate-y-[2px]" to="/create">
-              Tao sản phẩm mới
-            </Link>
           </div>
         </div>
 
@@ -118,27 +109,6 @@ export default function Product() {
                   <p className="m-[4px_0_0] text-[18px] font-semibold text-[#1f3d32] break-all">{status[latestVersion?.status] || "N/A"}</p>
                 </div>
               </div>
-
-              {/* QR Section */}
-              <section className="mt-[14px] border-[1px] border-dashed border-[#274a3b]/32 rounded-[16px] p-[14px] bg-[#fbfffc] grid gap-[10px]">
-                <h3 className="m-0 text-[16px] text-[#204031] font-bold">QR Truy Xuất Nguồn Gốc</h3>
-                <p className="m-0 text-[13px] text-[#456859]">In mã này và dán lên sản phẩm. Người dùng quét sẽ mở trang thông tin chi tiết.</p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-[minmax(96px,120px)_minmax(0,1fr)] gap-[12px] items-start">
-                  <div className="bg-white border-[1px] border-[#d4e7dc] rounded-[12px] p-[10px] w-full max-w-[120px] aspect-square flex items-center justify-center">
-                    {qrImageUrl && <img className="w-full h-full object-contain block" src={qrImageUrl} alt={`QR truy xuất sản phẩm ${id}`} />}
-                  </div>
-
-                  <div className="min-w-0">
-                    <p className="m-0 font-mono text-[12px] text-[#2d5646] break-all">{traceUrl}</p>
-                    <div className="grid grid-cols-2 gap-[8px] mt-[8px]">
-                      <button className="border-[1px] border-[#1f4336]/35 bg-[#f8f0e3] text-[#274c3d] rounded-[10px] px-[12px] py-[8px] text-[13px] cursor-pointer text-center" type="button" onClick={downloadQr}>
-                        Tải QR
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </section>
             </article>
 
             {/* Right Column: Version History */}
@@ -173,7 +143,6 @@ export default function Product() {
                 </div>
               )}
             </article>
-
           </section>
         )}
       </div>
