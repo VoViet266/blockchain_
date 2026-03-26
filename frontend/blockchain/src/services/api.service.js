@@ -23,6 +23,7 @@ export const getProducts = async (wallet) => {
 
 export const getProductDetail = async (id) => {
   const response = await axiosInstance.get(`/product/${id}`);
+
   return response.data;
 };
 
