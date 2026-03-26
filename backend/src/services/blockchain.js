@@ -108,7 +108,12 @@ const listenToEvents = () => {
 };
 
 export const addProductOnChain = async (productData, file) => {
-  const { name, origin, wallet } = productData;
+  const { 
+    name, origin, wallet, // core
+    product_type, variety, farm_name, location, producer, // origin fields
+    description, additional_info // version info
+  } = productData;
+
   if (wallet == null) {
     throw new Error("Missing wallet address.");
   }
@@ -123,21 +128,31 @@ export const addProductOnChain = async (productData, file) => {
     image = uploadResult.ipfsUrl;
   }
 
-  // Tạo sản phẩm trong DB trước (Pending)
+  // Create Product with new fields
   const product = await Product.create({
     name,
     origin,
+    product_type,
+    variety,
+    farm_name,
+    location,
+    producer,
     owner_wallet: wallet,
   });
 
   try {
-    const data = name + origin + status;
+    // Stringify additional info for hash calculation
+    const infoStr = additional_info ? JSON.stringify(additional_info) : "";
+    const data = name + origin + status + (description || "") + infoStr;
     const hashValue = crypto.createHash("sha256").update(data).digest("hex");
 
     await ProductVersion.create({
       product_id: product.id,
       version: 1,
       status: status,
+      description: description,
+      additional_info: additional_info ? JSON.parse(additional_info) : null,
+      location: location,
       image: image,
       hash: hashValue,
       tx_hash: null,
@@ -158,7 +173,7 @@ export const addProductOnChain = async (productData, file) => {
 
 export const updateProductOnChain = async (body, file) => {
   try {
-    const { id, status } = body;
+    const { id, status, description, location, additional_info } = body;
 
     let image = null;
     if (file) {
@@ -184,13 +199,18 @@ export const updateProductOnChain = async (body, file) => {
     });
     const nextVersion = latestVersion ? latestVersion.version + 1 : 1;
 
-    const data = product.name + product.origin + status;
+    // Stringify additional info for hash calculation
+    const infoStr = additional_info ? JSON.stringify(additional_info) : "";
+    const data = product.name + product.origin + status + (description || "") + infoStr;
     const hashValue = crypto.createHash("sha256").update(data).digest("hex");
 
     const productVersion = await ProductVersion.create({
       product_id: product.id,
       version: nextVersion,
       status: status,
+      description: description,
+      additional_info: additional_info ? JSON.parse(additional_info) : null,
+      location: location,
       image: image,
       hash: hashValue,
       tx_hash: null,

@@ -14,6 +14,26 @@ const Product = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    product_type: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    variety: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    farm_name: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    location: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    producer: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     origin: {
       type: DataTypes.STRING,
       allowNull: false,
