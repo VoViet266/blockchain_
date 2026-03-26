@@ -55,7 +55,7 @@ export default function Update() {
 
       setMessage("Đang yêu cầu ký giao dịch...");
       const txHash = await updateProductContract(uuid, hash);
-      setMessage(`Cập nhật sản phẩm thành công! Tx: ${txHash.slice(0, 10)}...`);
+      setMessage(`Cập nhật sản phẩm thành công! TxHash: ${txHash.slice(0, 10)}...`);
       setImage(null);
       setTimeout(() => {
         navigate(`/product/${productId.trim()}`);
@@ -96,6 +96,7 @@ export default function Update() {
                 <input
                   className="border-[1px] border-[#285242]/24 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f]"
                   value={productId}
+                  readOnly
                   onChange={(event) => setProductId(event.target.value)}
                   placeholder="VD: 1"
                 />

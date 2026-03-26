@@ -114,7 +114,7 @@ export default function Create() {
       setStatus("Đang yêu cầu ký giao dịch...");
       const txHash = await addProductContract(uuid, hash);
 
-      setStatus(`Tạo sản phẩm thành công! Tx: ${txHash.slice(0, 10)}...`);
+      setStatus(`Tạo sản phẩm thành công! TxHash: ${txHash.slice(0, 10)}...`);
       setName("");
       setOrigin("");
       setImage(null);

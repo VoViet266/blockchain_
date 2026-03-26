@@ -131,7 +131,7 @@ export default function ProductScanByUser() {
                           />
                         )}
                         <p className="m-0 font-mono text-[12px] leading-[1.5] break-all text-[#305848]">Hash: {version.hash}</p>
-                        <p className="m-0 font-mono text-[12px] leading-[1.5] break-all text-[#305848]">Tx: {version.tx_hash}</p>
+                        <p className="m-0 font-mono text-[12px] leading-[1.5] break-all text-[#305848]">TxHash: {version.tx_hash}</p>
                       </div>
                     </div>
                   ))}
