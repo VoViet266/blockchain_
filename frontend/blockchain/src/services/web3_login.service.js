@@ -3,7 +3,6 @@ import axios from "axios";
 
 const Web3Service = {
   async connectAndLogin() {
-    console.log("Bắt đầu quá trình đăng nhập Web3...");
     try {
       // Kiểm tra xem trình duyệt đã cài MetaMask chưa
       if (!window.ethereum) {

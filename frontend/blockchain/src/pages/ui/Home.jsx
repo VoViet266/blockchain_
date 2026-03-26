@@ -7,7 +7,7 @@ import {
   subscribeWalletChanges,
   WALLET_STORAGE_KEY,
 } from "../../services/wallet.service";
-import axios from "axios";
+import { STATUS_OPTIONS_MAP } from "../../enum/status_option";
 
 export default function Home() {
   const [wallet, setWallet] = useState("");
@@ -233,7 +233,7 @@ export default function Home() {
                   <h3 className="m-0 font-bold text-[#1f4134] text-[17px]">{item.name}</h3>
                   <p className="m-0 text-[#3d6051] text-[13px] leading-[1.5]">Origin: {item.origin}</p>
                   <span className="w-fit rounded-[999px] px-[9px] py-[5px] text-[11px] tracking-wider uppercase border-[1px] border-[#cfe5d8] text-[#266044] bg-[#ecf8f1] font-bold">
-                    {item.latest_version?.status || "NO STATUS"}
+                    {STATUS_OPTIONS_MAP[item.latest_version?.status] || "NO STATUS"}
                   </span>
                 </Link>
               ))}

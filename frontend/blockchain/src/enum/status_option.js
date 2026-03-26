@@ -1,0 +1,26 @@
+export const STATUS_OPTIONS = [
+  { value: "PLANTED", label: "Gieo trồng" },
+  { value: "GROWING", label: "Đang phát triển" },
+  { value: "HARVESTED", label: "Thu hoạch" },
+  { value: "INSPECTED", label: "Kiểm định chất lượng" },
+  { value: "PROCESSED", label: "Sơ chế / Chế biến" },
+  { value: "PACKAGED", label: "Đóng gói" },
+  { value: "STORED", label: "Lưu kho" },
+  { value: "SHIPPED", label: "Vận chuyển" },
+  { value: "DELIVERED", label: "Đã giao tới điểm bán" },
+  { value: "ON_SHELF", label: "Đang bày bán" },
+  { value: "SOLD", label: "Đã bán" },
+];
+export const STATUS_OPTIONS_MAP = {
+  PLANTED: "Gieo trồng",
+  GROWING: "Đang phát triển",
+  HARVESTED: "Thu hoạch",
+  INSPECTED: "Kiểm định chất lượng",
+  PROCESSED: "Sơ chế / Chế biến",
+  PACKAGED: "Đóng gói",
+  STORED: "Lưu kho",
+  SHIPPED: "Vận chuyển",
+  DELIVERED: "Đã giao tới điểm bán",
+  ON_SHELF: "Đang bày bán",
+  SOLD: "Đã bán",
+};

@@ -63,82 +63,152 @@ export default function ProductScanByUser() {
     return imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
   };
 
+  const renderAdditionalInfo = (info) => {
+    if (!info) return null;
+    let items = [];
+    try {
+      const parsed = typeof info === 'string' ? JSON.parse(info) : info;
+      items = Object.entries(parsed);
+    } catch { return null; }
 
+    if (items.length === 0) return null;
+
+    const labelMap = {
+      fertilizer: "Phân bón",
+      pesticide: "Thuốc BVTV",
+      yield: "Sản lượng",
+      quality: "Chất lượng",
+      inspector: "Đơn vị kiểm định",
+      certificate: "Chứng chỉ",
+      batch_id: "Mã lô",
+      expiry_date: "Hạn sử dụng",
+      temperature: "Nhiệt độ",
+      carrier: "Vận chuyển"
+    };
+
+    return (
+      <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-3 pt-3 border-t border-[#2a875f]/10">
+        {items.map(([key, value]) => (
+          <div key={key} className="flex flex-col">
+            <span className="text-[10px] uppercase font-bold text-[#4a6d5d] tracking-wider">{labelMap[key] || key}</span>
+            <span className="text-[14px] text-[#1f3d32] font-semibold">{value}</span>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
-    <div className="min-h-[100vh] p-[24px] font-sf-pro text-[#20342b] overflow-x-hidden bg-[radial-gradient(circle_at_12%_14%,rgba(255,184,91,0.2),transparent_34%),radial-gradient(circle_at_88%_10%,rgba(46,143,106,0.22),transparent_35%),linear-gradient(155deg,#f7f3e9_0%,#eef5e2_53%,#e0efe5_100%)]">
-      <div className="max-w-[1080px] mx-auto grid gap-[16px] animate-[fade-up_600ms_ease-out]">
-
-        {/* Top Row */}
-        <div className="flex items-center justify-between gap-[12px] flex-wrap">
-          <h1 className="m-0 text-[30px] md:text-[4vw] lg:text-[48px] leading-[1.08] font-bold">
-            Thông tin sản phẩm
-          </h1>
-          <div className="flex items-center gap-[10px] flex-wrap">
-            <span className="rounded-[999px] px-[12px] py-[8px] border-[1px] border-[#1f4436]/28 bg-white/72 text-[13px] text-[#2f5647]">
-              Mã sản phẩm: #{id}
-            </span>
-          </div>
+    <div className="min-h-[100vh] pb-[60px] font-sf-pro text-[#20342b] bg-[#f8fbf9]">
+      {/* Header */}
+      <div className="bg-[#163629] text-white py-6 px-6 shadow-lg">
+        <div className="max-w-[800px] mx-auto flex items-center justify-between">
+           <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                 <svg className="w-6 h-6 text-[#4ade80]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+              </div>
+              <div>
+                <h1 className="m-0 text-[18px] font-bold tracking-tight">Xác thực nguồn gốc</h1>
+                <p className="m-0 text-[12px] text-white/60">Sản phẩm đã được kiểm chứng bởi Blockchain</p>
+              </div>
+           </div>
+           <span className="text-[12px] font-mono bg-white/10 px-3 py-1 rounded-full border border-white/10">#{id?.slice(0, 8)}</span>
         </div>
+      </div>
 
-        {loading && <div className="rounded-[16px] p-[12px] border-[1px] border-[#d6e8de] bg-[#f6fbf7] text-[#355f4f]">Đang tải thông tin sản phẩm...</div>}
-        {error && !loading && <div className="rounded-[16px] p-[12px] border-[1px] border-[#ebc8c8] bg-[#fff5f5] text-[#7a3737]">{error}</div>}
+      <div className="max-w-[800px] mx-auto px-6 mt-8">
+        {loading && <div className="text-center py-20 opacity-40">Đang truy vấn dữ liệu...</div>}
+        {error && <div className="bg-red-50 text-red-600 p-6 rounded-2xl text-center border border-red-100">{error}</div>}
 
         {!loading && !error && data && (
-          <section className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-[14px]">
+          <div className="space-y-10">
+            {/* Consumer Product Profile */}
+            <div className="bg-white rounded-[32px] overflow-hidden shadow-2xl shadow-[#20342b]/05 border border-[#20342b]/05">
+               <div className="aspect-square relative overflow-hidden">
+                  <img src={toImageUrl(latestVersion?.image)} className="w-full h-full object-cover" alt={data.name} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
+                     <div>
+                        <div className="flex items-center gap-2 mb-2">
+                           <span className="px-3 py-1 rounded-full bg-[#4ade80] text-[#163629] text-[11px] font-black uppercase tracking-wider">
+                              {status[latestVersion?.status] || latestVersion?.status}
+                           </span>
+                        </div>
+                        <h2 className="text-[32px] font-black text-white leading-tight">{data.name}</h2>
+                     </div>
+                  </div>
+               </div>
+               
+               <div className="p-8">
+                  <div className="grid grid-cols-2 gap-8 mb-8">
+                     <div>
+                        <p className="text-[11px] font-bold text-[#4a6d5d] uppercase mb-1 tracking-widest">Nguồn gốc</p>
+                        <p className="text-[16px] text-[#163629] font-bold">{data.origin}</p>
+                     </div>
+                     <div>
+                        <p className="text-[11px] font-bold text-[#4a6d5d] uppercase mb-1 tracking-widest">Cơ sở sản xuất</p>
+                        <p className="text-[16px] text-[#163629] font-bold">{data.producer || "HTX Địa phương"}</p>
+                     </div>
+                  </div>
 
-            {/* Left Column: General Info & QR */}
-            <article className="bg-white/80 border-[1px] border-[#26493a]/16 rounded-[22px] p-[20px] shadow-[0_20px_38px_rgba(39,73,58,0.08)]">
-              <h2 className="mt-0 text-[24px] font-bold mb-[16px]">Thông tin chung</h2>
-              <div className="grid gap-[10px]">
-                <div className="rounded-[12px] bg-[#f6fbf7] border-[1px] border-[#d6e8de] px-[12px] py-[10px]">
-                  <p className="m-0 text-[12px] uppercase tracking-[0.08em] text-[#5a7d6d]">Tên sản phẩm</p>
-                  <p className="m-[4px_0_0] text-[18px] font-semibold text-[#1f3d32] break-all">{data.name || "N/A"}</p>
-                </div>
-                <div className="rounded-[12px] bg-[#f6fbf7] border-[1px] border-[#d6e8de] px-[12px] py-[10px]">
-                  <p className="m-0 text-[12px] uppercase tracking-[0.08em] text-[#5a7d6d]">Nguồn gốc</p>
-                  <p className="m-[4px_0_0] text-[18px] font-semibold text-[#1f3d32] break-all">{data.origin || "N/A"}</p>
-                </div>
-                <div className="rounded-[12px] bg-[#f6fbf7] border-[1px] border-[#d6e8de] px-[12px] py-[10px]">
-                  <p className="m-0 text-[12px] uppercase tracking-[0.08em] text-[#5a7d6d]">Trạng thái cuối cùng</p>
-                  <p className="m-[4px_0_0] text-[18px] font-semibold text-[#1f3d32] break-all">{status[latestVersion?.status] || "N/A"}</p>
-                </div>
-              </div>
-            </article>
+                  <div className="flex flex-wrap gap-4 pt-6 border-t border-gray-100">
+                     <div className="bg-[#f0f9f1] px-4 py-2 rounded-xl flex items-center gap-2">
+                        <span className="text-[13px] font-bold text-[#2a875f]">{data.product_type || "Nông sản sạch"}</span>
+                     </div>
+                     <div className="bg-[#fcf8ed] px-4 py-2 rounded-xl flex items-center gap-2">
+                        <span className="text-[13px] font-bold text-[#b45309]">{data.variety || "Chuẩn ST25"}</span>
+                     </div>
+                  </div>
+               </div>
+            </div>
 
-            {/* Right Column: Version History */}
-            <article className="bg-white/80 border-[1px] border-[#26493a]/16 rounded-[22px] p-[20px] shadow-[0_20px_38px_rgba(39,73,58,0.08)]">
-              <h2 className="mt-0 text-[24px] font-bold mb-[16px]">Các Giai Đoạn</h2>
-              {!data.versions?.length ? (
-                <div className="rounded-[16px] p-[12px] border-[1px] border-[#d6e8de] bg-[#f6fbf7] text-[#355f4f]">Chưa có phiên bản nào.</div>
-              ) : (
-                <div className="grid gap-[10px]">
-                  {data.versions.map((version) => (
-                    <div className="rounded-[14px] border-[1px] border-[#274a3b]/16 bg-white p-[12px] animate-[pop-in_460ms_ease-out]" key={version.version}>
-                      <div className="flex items-center justify-between gap-[10px] flex-wrap">
-                        <strong className="text-[16px]">Giai đoạn {version.version}</strong>
-                        <span className="rounded-[999px] px-[10px] py-[5px] bg-[#ecf8f1] text-[#246144] border-[1px] border-[#cae8d7] text-[12px] font-bold tracking-[0.04em]">
-                          {status[version.status]}
-                        </span>
-                      </div>
+            {/* Consumer Timeline */}
+            <div className="space-y-6 relative">
+               <div className="absolute left-[24px] top-6 bottom-6 w-[2px] bg-gray-100"></div>
 
-                      <div className="mt-[10px] grid gap-[8px]">
-                        {version.image && (
-                          <img
-                            className="w-full max-h-[320px] object-cover rounded-[10px] border-[1px] border-[#dbeadf]"
-                            src={toImageUrl(version.image)}
-                            alt={`Product version ${version.version}`}
-                          />
-                        )}
-                        <p className="m-0 font-mono text-[12px] leading-[1.5] break-all text-[#305848]">Hash: {version.hash}</p>
-                        <p className="m-0 font-mono text-[12px] leading-[1.5] break-all text-[#305848]">TxHash: {version.tx_hash}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </article>
-          </section>
+               <h3 className="text-[20px] font-black text-[#163629] flex items-center gap-3 ml-2">
+                  <div className="w-10 h-10 rounded-full bg-[#2a875f] flex items-center justify-center text-white relative z-10">
+                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  </div>
+                  Lịch trình sản phẩm
+               </h3>
+
+               {data.versions?.map((version, idx) => (
+                  <div key={version.version} className="relative pl-16 animate-[fade-up_500ms_ease-out]">
+                     <div className="absolute left-[24px] -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-[#2a875f] z-10"></div>
+                     
+                     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="flex justify-between items-start mb-4">
+                           <div>
+                              <span className="text-[11px] font-bold text-[#2a875f] uppercase tracking-widest">{status[version.status] || version.status}</span>
+                              <h4 className="text-[17px] font-bold text-[#163629] mt-1">{version.description || `Hành trình tại ${data.origin}`}</h4>
+                              <p className="text-[12px] text-[#4a6d5d] mt-1 italic">{new Date(version.created_at).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</p>
+                           </div>
+                           <div className="bg-[#f0f7f2] p-2 rounded-lg border border-[#2a875f]/10" title="Verified on Blockchain">
+                              <svg className="w-5 h-5 text-[#2a875f]" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.64.304 1.24.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                           </div>
+                        </div>
+
+                        {version.image && <img src={toImageUrl(version.image)} className="w-full h-[200px] object-cover rounded-xl mb-4 border border-gray-50" alt="Evidence" />}
+                        
+                        {renderAdditionalInfo(version.additional_info)}
+                        
+                        <div className="mt-4 flex flex-col gap-1 opacity-40 hover:opacity-100 transition-opacity">
+                           <span className="text-[9px] font-mono break-all capitalize">Data Hash: {version.hash}</span>
+                           <a href={`https://coston2-explorer.flare.network/tx/${version.tx_hash}`} target="_blank" rel="noreferrer" className="text-[9px] font-mono text-blue-600 underline">Giao dịch: {version.tx_hash?.slice(0, 20)}...</a>
+                        </div>
+                     </div>
+                  </div>
+               ))}
+            </div>
+
+            <div className="bg-[#f0f7f2] p-6 rounded-[24px] border border-[#2a875f]/20 text-center">
+               <h4 className="text-[16px] font-bold text-[#163629] mb-2">Thông điệp từ nhà sản xuất</h4>
+               <p className="text-[13px] text-[#4a6d5d] leading-relaxed">
+                  Chúng tôi cam kết minh bạch 100% dữ liệu. Mỗi bước trong hành trình này đều được ký số 
+                  bởi đơn vị có thẩm quyền và không thể sửa đổi sau khi đã lên Blockchain.
+               </p>
+            </div>
+          </div>
         )}
       </div>
     </div>
