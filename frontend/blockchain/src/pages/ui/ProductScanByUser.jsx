@@ -88,7 +88,7 @@ export default function ProductScanByUser() {
           <section className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-[14px]">
 
             {/* Left Column: General Info & QR */}
-            <article className="bg-white/80 border-[1px] border-[#26493a]/16 rounded-[22px] p-[20px] shadow-[0_20px_38px_rgba(39,73,58,0.08)]">
+            <article className="bg-white/80 border-[1px] border-[#26493a]/16 rounded-[22px] h-fit p-[20px] shadow-[0_20px_38px_rgba(39,73,58,0.08)]">
               <h2 className="mt-0 text-[24px] font-bold mb-[16px]">Thông tin chung</h2>
               <div className="grid gap-[10px]">
                 <div className="rounded-[12px] bg-[#f6fbf7] border-[1px] border-[#d6e8de] px-[12px] py-[10px]">
@@ -108,7 +108,7 @@ export default function ProductScanByUser() {
 
             {/* Right Column: Version History */}
             <article className="bg-white/80 border-[1px] border-[#26493a]/16 rounded-[22px] p-[20px] shadow-[0_20px_38px_rgba(39,73,58,0.08)]">
-              <h2 className="mt-0 text-[24px] font-bold mb-[16px]">Các Giai Đoạn</h2>
+              <h2 className="mt-0 text-[24px] font-bold mb-[16px]">Các giai đoạn</h2>
               {!data.versions?.length ? (
                 <div className="rounded-[16px] p-[12px] border-[1px] border-[#d6e8de] bg-[#f6fbf7] text-[#355f4f]">Chưa có phiên bản nào.</div>
               ) : (
