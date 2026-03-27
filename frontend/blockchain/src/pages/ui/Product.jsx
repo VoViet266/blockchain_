@@ -36,7 +36,7 @@ export default function Product() {
       } catch (fetchError) {
         setError(
           fetchError?.response?.data?.detail ||
-            "Không thể tải thông tin sản phẩm.",
+          "Không thể tải thông tin sản phẩm.",
         );
       } finally {
         setLoading(false);
@@ -123,7 +123,7 @@ export default function Product() {
     <div className="min-h-screen p-[24px] font-sf-pro text-[#20342b] overflow-x-hidden bg-[radial-gradient(circle_at_12%_14%,rgba(255,184,91,0.2),transparent_34%),radial-gradient(circle_at_88%_10%,rgba(46,143,106,0.22),transparent_35%),linear-gradient(155deg,#f7f3e9_0%,#eef5e2_53%,#e0efe5_100%)]">
       <div className="max-w-1200 mx-auto grid gap-10 animate-[fade-up_600ms_ease-out]">
         <div className="flex items-center justify-between gap-[12px] flex-wrap">
-          <h1 className="m-0 text-[30px] md:text-[4vw] lg:text-[48px] leading-[1.08] font-bold">
+          <h1 className="m-0 text-[34px]! md:text-[4vw] lg:text-[48px] leading-[1.08] font-bold">
             Thông tin sản phẩm
           </h1>
           <div className="flex items-center gap-[10px] flex-wrap">
@@ -148,7 +148,7 @@ export default function Product() {
         </div>
       </div>
 
-      <div className="max-w-1200 mx-auto px-6 mt-8 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10">
+      <div className="max-w-1200 mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10 mt-20">
         {/* Main Content: The Story */}
         <main className="space-y-8">
           {loading && (
@@ -164,43 +164,53 @@ export default function Product() {
 
           {!loading && !error && data && (
             <>
-              <div className="bg-white rounded-[22px] overflow-hidden border border-[#274c3d]/10  ">
-                <div className="p-8 grid md:grid-cols-[280px_1fr] gap-8">
+              <div className="bg-white p-20 rounded-[22px] overflow-hidden border border-[#274c3d]/10  ">
+                {/* <span className="text-[#163629] text-2xl font-semibold block">
+                  Thông tin chi tiết
+                </span> */}
+                <div className="grid md:grid-cols-[200px_1fr] gap-8">
                   <div className="relative group">
                     <img
                       src={toImageUrl(latestVersion?.image)}
-                      className="w-full aspect-square object-cover rounded-2xl  group-hover:scale-[1.02] transition-transform duration-500"
+                      className="w-full aspect-square object-cover rounded-2xl group-hover:scale-[1.02] transition-transform duration-500"
                       alt={data.name}
                     />
                   </div>
 
-                  <div className="flex flex-col h-full bg-white/40  ">
+                  <div className="flex flex-col h-full bg-white/40">
                     {/* Header: Tên sản phẩm */}
-                    <div className="relative pb-6 border-b border-[#2a875f]/10">
-                      <span className="text-[#2a875f] font-extrabold text-[12px] uppercase tracking-[0.2em] mb-2 block">
-                        Thông tin chi tiết
-                      </span>
-                      <h2 className="text-[28px] md:text-[32px] font-black text-[#163629] leading-tight">
+                    <div className="relative flex justify-between pb-6 border-[#2a875f]/10">
+                      <h2 className="text-xl md:text-[32px] font-semibold leading-tight">
                         {data.name}
                       </h2>
+                      <div className="border-[#2a875f]/10 cursor-default">
+                        <div className="inline-flex items-center gap-3 bg-[#2a875f] text-white px-10 py-4 rounded-full">
+                          <div className="flex flex-col">
+                            <span className="text-[14px]">
+                              {STATUS_OPTIONS_MAP[latestVersion?.status] ||
+                                "Đang cập nhật"}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12 py-8">
+                    <div className="grid grid-cols-1 rounded-xl md:grid-cols-2 gap-y-8 gap-x-12 py-8">
                       {/* Loại & Giống */}
                       <div className="space-y-6">
                         <div className="flex flex-col">
-                          <p className="text-[11px] font-bold text-[#4a6d5d]/70 uppercase tracking-widest mb-1">
+                          <p className="text-[14px] font-medium text-[#4a6d5d]/70 mb-1">
                             Loại sản phẩm
                           </p>
-                          <p className="text-[17px] text-[#163629] font-semibold">
+                          <p className="text-lg">
                             {data.product_type || "Nông sản"}
                           </p>
                         </div>
                         <div className="flex flex-col">
-                          <p className="text-[11px] font-bold text-[#4a6d5d]/70 uppercase tracking-widest mb-1">
+                          <p className="text-[14px] font-medium text-[#4a6d5d]/70 mb-1">
                             Giống cây trồng
                           </p>
-                          <p className="text-[17px] text-[#163629] font-semibold">
+                          <p className="text-lg">
                             {data.variety || "Bản địa"}
                           </p>
                         </div>
@@ -209,32 +219,19 @@ export default function Product() {
                       {/* Nông trại & Vùng trồng */}
                       <div className="space-y-6">
                         <div className="flex flex-col">
-                          <p className="text-[11px] font-bold text-[#4a6d5d]/70 uppercase tracking-widest mb-1">
+                          <p className="text-[14px] font-medium text-[#4a6d5d]/70 mb-1">
                             Đơn vị sản xuất
                           </p>
-                          <p className="text-[17px] text-[#163629] font-semibold italic">
+                          <p className="text-lg">
                             {data.farm_name || "Nông trại địa phương"}
                           </p>
                         </div>
                         <div className="flex flex-col">
-                          <p className="text-[11px] font-bold text-[#4a6d5d]/70 uppercase tracking-widest mb-1">
+                          <p className="text-[14px] font-medium text-[#4a6d5d]/70 mb-1">
                             Vùng canh tác
                           </p>
                           <div className="flex items-center gap-2 mt-1">
-                            <svg
-                              className="w-4 h-4 text-[#2a875f]"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                              />
-                            </svg>
-                            <p className="text-[16px] text-[#163629] font-bold">
+                            <p className="text-lg">
                               {data.origin}
                             </p>
                           </div>
@@ -242,24 +239,12 @@ export default function Product() {
                       </div>
                     </div>
 
-                    <div className="mt-auto pt-6 border-t border-[#2a875f]/10">
-                      <div className="inline-flex items-center gap-3 bg-[#2a875f] text-white px-6 py-3 rounded-xl">
-                        <div className="flex flex-col">
-                          <span className="text-[10px] font-bold uppercase opacity-80 leading-none mb-1">
-                            Trạng thái
-                          </span>
-                          <span className="text-[14px] font-black uppercase tracking-wider">
-                            {STATUS_OPTIONS_MAP[latestVersion?.status] ||
-                              "Đang cập nhật"}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+
                   </div>
                 </div>
               </div>
 
-              <div className="py-10 relative bg-white rounded-[22px] overflow-hidden border border-[#274c3d]/10 p-8 ">
+              <div className="p-20 relative bg-white rounded-[22px] overflow-hidden border border-[#274c3d]/10">
                 <h3 className="text-[32px] font-black text-[#163629] mb-12 ">
                   Các giai đoạn
                 </h3>
@@ -269,40 +254,6 @@ export default function Product() {
                       {" "}
                       <div>
                         <div className="flex-1 bg-white rounded-[20px]  p-6 md:p-8">
-                          <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-6 min-h-80">
-                            {/* header card */}
-                            <div>
-                              <div className="flex items-center gap-10 mb-5">
-                                <span className="px-3 py-1 rounded-2xl bg-[#2a875f]/10 text-[#2a875f] text-[11px] font-bold uppercase tracking-wider">
-                                  {STATUS_OPTIONS_MAP[version.status]}
-                                </span>
-                                <span className="text-[12px] text-[#4a6d5d] font-medium">
-                                  {new Date(
-                                    version.created_at,
-                                  ).toLocaleDateString("vi-VN", {
-                                    day: "2-digit",
-                                    month: "long",
-                                    year: "numeric",
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })}
-                                </span>
-                              </div>
-                              <h4 className="text-[20px] font-bold text-[#163629]">{`Giai đoạn ${STATUS_OPTIONS_MAP[version.status].toLowerCase()}`}</h4>
-                            </div>
-                            {/* right */}
-                            <div className="flex flex-col gap-2 items-end shrink-0">
-                              <a
-                                href={`https://coston2-explorer.flare.network/tx/${version.tx_hash}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-[10px] font-mono text-[#4a6d5d] hover:text-[#2a875f] flex items-center gap-1"
-                              >
-                                Tx: {version.tx_hash?.slice(0, 22)}...
-                              </a>
-                            </div>
-                          </div>
-
                           <div className="grid md:grid-cols-[200px_1fr] gap-8">
                             {version.image && (
                               <img
@@ -312,23 +263,56 @@ export default function Product() {
                               />
                             )}
                             <div className="flex flex-col justify-start">
-                              <p className="text-[14px] text-[#4a6d5d] leading-relaxed italic border-l-4 border-[#2a875f]/30 pl-4 py-1 min-h-100">
+                              <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-6">
+                                {/* header card */}
+                                <div>
+                                  <div className="flex items-center gap-10 mb-5">
+                                    <span className="px-10 py-6 rounded-2xl bg-[#2a875f]/10 text-[#2a875f] text-[12px]">
+                                      {STATUS_OPTIONS_MAP[version.status]}
+                                    </span>
+                                    <span className="text-[12px] text-[#4a6d5d] font-medium">
+                                      {new Date(
+                                        version.created_at,
+                                      ).toLocaleDateString("vi-VN", {
+                                        day: "2-digit",
+                                        month: "long",
+                                        year: "numeric",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      })}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <p className="text-[14px] text-[#4a6d5d] pl-4 py-1 min-h-100">
                                 {version.description || "Không có mô tả"}
                               </p>
                               {renderAdditionalInfo(version.additional_info)}
                               <div className="mt-6 flex flex-1 items-end gap-2">
-                                <span className="text-[10px] font-bold text-[#4a6d5d] uppercase tracking-widest opacity-50">
-                                  Content Hash:
+                                <span className="text-[14px] text-[#4a6d5d]">
+                                  Mã băm nội dung:
                                 </span>
-                                <span className="text-[10px] font-mono break-all text-[#4a6d5d]">
+                                <span className="text-[12px] break-all text-[#4a6d5d]">
                                   {version.hash}
                                 </span>
+                              </div>
+                              <div className="mt-6 flex flex-1 items-end gap-2">
+                                <span className="text-[14px] text-[#4a6d5d]">
+                                  Mã giao dịch:
+                                </span>
+                                <a
+                                  href={`https://coston2-explorer.flare.network/tx/${version.tx_hash}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-[12px] text-[#4a6d5d] hover:text-[#2a875f] flex items-center gap-1"
+                                >
+                                  {version.tx_hash?.slice(0, 22)}...
+                                </a>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div className="border-b border-[#274c3d]/7"></div>
                     </>
                   ))}
                 </div>
@@ -338,11 +322,11 @@ export default function Product() {
         </main>
 
         <aside className="space-y-6">
-          <div className="bg-white rounded-[20px] p-14 border border-[#274c3d]/10 shadow-lg sticky">
-            <h4 className="text-[18px] font-bold text-[#163629] mb-4 flex items-center gap-2">
+          <div className="bg-white rounded-[20px] p-20 border border-[#274c3d]/10 shadow-lg sticky">
+            <h4 className="text-2xl font-semibold text-[#163629] mb-10 flex items-center gap-2">
               Chứng thực số
             </h4>
-            <div className="aspect-square p-4 mb-6 flex items-center justify-center">
+            <div className="aspect-square p-4 mb-20 flex items-center justify-center">
               {qrImageUrl && (
                 <img
                   className="w-full h-full"
@@ -352,16 +336,16 @@ export default function Product() {
               )}
             </div>
 
-            <div className="space-y-3 flex flex-col gap-10">
+            <div className="space-y-4 flex flex-col gap-10">
               <button
                 onClick={printQr}
-                className="w-full h-40 flex items-center justify-center gap-2 py-3 bg-[#163629] text-white rounded-xl font-bold text-[14px] hover:bg-[#2a875f] transition-all"
+                className="w-full h-40 flex items-center justify-center gap-2 py-3 bg-[#163629] text-white rounded-full text-[14px] cursor-pointer hover:bg-[#2a875f] transition-all"
               >
-                In Tem Truy Xuất
+                In tem truy xuất
               </button>
               <button
                 onClick={downloadQr}
-                className="w-full h-40 flex items-center justify-center gap-2 py-3 bg-white text-[#163629] border border-[#163629]/20 rounded-xl font-bold text-[14px] hover:bg-gray-50 transition-all"
+                className="w-full h-40 flex items-center justify-center gap-2 py-3 bg-white text-[#163629] border border-[#163629]/20 cursor-pointer rounded-full text-[14px] hover:bg-gray-50 transition-all"
               >
                 Tải mã QR
               </button>
