@@ -130,20 +130,6 @@ export default function ProductScanByUser() {
             <span className="rounded-[999px] px-[12px] py-[8px] border-[1px] border-[#1f4436]/28 bg-white/72 text-[13px] text-[#2f5647]">
               Mã sản phẩm: #{id}
             </span>
-            <Link
-              className="rounded-full px-[14px] py-8 text-[13px] no-underline border-[1px] border-[#1f4336]/35 bg-[#f8f0e3] text-[#274c3d] transition-transform duration-180 hover:-translate-y-[2px]"
-              to="/"
-            >
-              Về trang chủ
-            </Link>
-            <div className="flex items-center gap-3">
-              <Link
-                to={`/update/${id}`}
-                className="rounded-full px-[14px] py-8 text-[13px] no-underline border-[1px] border-[#1f4336]/35 bg-[#f8f0e3] text-[#274c3d] transition-transform duration-180 hover:-translate-y-[2px]"
-              >
-                Cập nhật sản phẩm
-              </Link>
-            </div>
           </div>
         </div>
       </div>
