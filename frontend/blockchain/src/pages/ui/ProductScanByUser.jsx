@@ -154,7 +154,7 @@ export default function ProductScanByUser() {
                 {/* <span className="text-[#163629] text-2xl font-semibold block">
                   Thông tin chi tiết
                 </span> */}
-                <div className="grid md:grid-cols-[200px_1fr] gap-8">
+                <div className="grid md:grid-cols-[200px_1fr] gap-24">
                   <div className="relative group">
                     <img
                       src={toImageUrl(latestVersion?.image)}
@@ -239,8 +239,8 @@ export default function ProductScanByUser() {
                     <>
                       {" "}
                       <div>
-                        <div className="flex-1 bg-white rounded-[20px]  p-6 md:p-8">
-                          <div className="grid md:grid-cols-[200px_1fr] gap-8">
+                        <div className="flex-1 bg-white rounded-[20px] p-6 md:p-24">
+                          <div className="grid md:grid-cols-[200px_1fr] gap-24">
                             {version.image && (
                               <img
                                 src={toImageUrl(version.image)}
@@ -274,6 +274,25 @@ export default function ProductScanByUser() {
                                 {version.description || "Không có mô tả"}
                               </p>
                               {renderAdditionalInfo(version.additional_info)}
+                              <div className="mt-6 flex flex-1 items-end gap-2">
+                                <span className="text-[14px] text-[#4a6d5d]">
+                                  Nhiệt độ:
+                                </span>
+                                <span className="text-[12px] break-all text-[#4a6d5d] line-clamp-1">
+                                  {version.temperature ? `${version.temperature}°C` : version.status !== 'planted' ? 'Không đổi' : "Không có dữ liệu"}
+                                </span>
+                              </div>
+
+                              <div className="mt-6 flex flex-1 items-end gap-2">
+                                <span className="text-[14px] text-[#4a6d5d]">
+                                  Độ ẩm:
+                                </span>
+                                <span className="text-[12px] break-all text-[#4a6d5d] line-clamp-1">
+                                  {version.humidity ? `${version.humidity}%` : version.status !== 'planted' ? 'Không đổi' : "Không có dữ liệu"}
+                                </span>
+                              </div>
+
+
                               <div className="mt-6 flex flex-1 items-end gap-2">
                                 <span className="text-[14px] text-[#4a6d5d]">
                                   Mã băm nội dung:

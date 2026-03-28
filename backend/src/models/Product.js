@@ -22,6 +22,7 @@ const Product = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    
     farm_name: {
       type: DataTypes.STRING,
       allowNull: true,

@@ -14,6 +14,14 @@ const ProductVersion = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    temperature: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    humidity: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     status: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -46,7 +54,7 @@ const ProductVersion = sequelize.define(
   {
     tableName: "products_productversion",
     timestamps: true,
-    createdAt: "created_at",    
+    createdAt: "created_at",
     updatedAt: false,
   },
 );

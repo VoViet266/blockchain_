@@ -108,10 +108,11 @@ const listenToEvents = () => {
 };
 
 export const addProductOnChain = async (productData, file) => {
-  const { 
+  const {
     name, origin, wallet, // core
     product_type, variety, farm_name, location, producer, // origin fields
-    description, additional_info // version info
+    description, additional_info, // version info
+    temperature, humidity, // new fields
   } = productData;
 
   if (wallet == null) {
@@ -156,6 +157,8 @@ export const addProductOnChain = async (productData, file) => {
       image: image,
       hash: hashValue,
       tx_hash: null,
+      temperature,
+      humidity,
     });
 
     return {

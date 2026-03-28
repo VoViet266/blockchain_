@@ -14,6 +14,8 @@ export default function Create() {
   const [name, setName] = useState("");
   const [productType, setProductType] = useState("");
   const [variety, setVariety] = useState("");
+  const [temperature, setTemperature] = useState("");
+  const [humidity, setHumidity] = useState("");
   const [farmName, setFarmName] = useState("");
   const [location, setLocation] = useState("");
   const [producer, setProducer] = useState("");
@@ -112,12 +114,15 @@ export default function Create() {
     formData.append("location", location.trim());
     formData.append("producer", producer.trim());
     formData.append("origin", origin.trim());
+    formData.append("temperature", temperature.trim());
+    formData.append("humidity", humidity.trim());
     formData.append("description", description.trim());
     formData.append("wallet", wallet);
     formData.append("image", image);
 
     try {
       setIsSubmitting(true);
+
       setStatus("Đang tải dữ liệu và ảnh lên máy chủ...");
       const response = await createProduct(formData);
 
@@ -157,7 +162,7 @@ export default function Create() {
         <section className="bg-white/80 backdrop-blur-md border-[1px] border-[#274c3d]/15 rounded-[28px] p-[32px] shadow-[0_25px_50px_rgba(40,76,61,0.06)]">
           <div className="flex justify-between items-start flex-wrap gap-[15px]">
             <div>
-              <h1 className="m-0 mb-[6px] text-[32px] md:text-[40px] text-[green] font-bold tracking-tight ">
+              <h1 className="m-0 mb-[6px] text-[32px] md:text-[40px] text-[#20342b] font-bold tracking-tight ">
                 Khởi tạo sản phẩm
               </h1>
            
@@ -182,7 +187,7 @@ export default function Create() {
 
           <div className="mt-[24px] flex flex-wrap gap-[10px]">
             <Link
-              className="inline-flex items-center gap-[8px] justify-center rounded-[14px] px-[16px] py-[10px] text-[14px] font-medium transition-all duration-180 hover:-translate-y-[2px] bg-white text-[#2e5544] border-[1px] border-[#22483a]/15 shadow-sm no-underline"
+              className="inline-flex items-center gap-[8px] justify-center rounded-[14px] px-[16px] py-[10px] text-[14px] transition-all duration-180 hover:-translate-y-[2px] bg-white text-[#2e5544] border-[1px] border-[#22483a]/15 no-underline"
               to="/"
             >
               Về trang chủ
@@ -258,6 +263,26 @@ export default function Create() {
                     value={producer}
                     onChange={(e) => setProducer(e.target.value)}
                     placeholder="VD: Công ty CP Lương thực Miền Nam"
+                  />
+                </label>
+
+                <label className="grid gap-[6px]">
+                  <span className="text-[13px] text-[#4a6d5d] font-bold uppercase tracking-wider">Nhiệt độ (°C)</span>
+                  <input
+                    className="border-[1px] border-[#295242]/15 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
+                    value={temperature}
+                    onChange={(e) => setTemperature(e.target.value)}
+                    placeholder="VD: 25.5"
+                  />
+                </label>
+
+                <label className="grid gap-[6px]">
+                  <span className="text-[13px] text-[#4a6d5d] font-bold uppercase tracking-wider">Độ ẩm (%)</span>
+                  <input
+                    className="border-[1px] border-[#295242]/15 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
+                    value={humidity}
+                    onChange={(e) =>setHumidity(e.target.value)}
+                    placeholder="VD: 74"
                   />
                 </label>
 
@@ -344,7 +369,7 @@ export default function Create() {
 
             <div className="flex justify-end pt-4">
               <button
-                className="w-full md:w-auto inline-flex items-center gap-[10px] justify-center rounded-[16px] px-[32px] py-[14px] text-[16px] font-bold cursor-pointer transition-all duration-180 hover:-translate-y-[2px] active:translate-y-[0] bg-gradient-to-br from-[#2a875f] to-[#1f6648] text-white shadow-[0_15px_30px_rgba(42,135,95,0.25)] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full md:w-auto inline-flex items-center gap-[10px] justify-center rounded-xl px-20 py-10 text-[16px] cursor-pointer transition-all duration-180 hover:-translate-y-[2px] active:translate-y-[0] bg-gradient-to-br from-[#2a875f] to-[#1f6648] text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 type="submit"
                 disabled={isSubmitting}
               >
@@ -354,7 +379,7 @@ export default function Create() {
                     Đang xử lý...
                   </>
                 ) : (
-                  "Xác nhận & Khởi tạo trên Blockchain"
+                  "Khởi tạo sản phẩm"
                 )}
               </button>
             </div>

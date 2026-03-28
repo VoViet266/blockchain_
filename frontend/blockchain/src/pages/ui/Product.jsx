@@ -168,7 +168,7 @@ export default function Product() {
                 {/* <span className="text-[#163629] text-2xl font-semibold block">
                   Thông tin chi tiết
                 </span> */}
-                <div className="grid md:grid-cols-[200px_1fr] gap-8">
+                <div className="grid md:grid-cols-[200px_1fr] gap-24">
                   <div className="relative group">
                     <img
                       src={toImageUrl(latestVersion?.image)}
@@ -202,7 +202,7 @@ export default function Product() {
                           <p className="text-[14px] font-medium text-[#4a6d5d]/70 mb-1">
                             Loại sản phẩm
                           </p>
-                          <p className="text-lg">
+                          <p className="text-[15px]">
                             {data.product_type || "Nông sản"}
                           </p>
                         </div>
@@ -210,7 +210,7 @@ export default function Product() {
                           <p className="text-[14px] font-medium text-[#4a6d5d]/70 mb-1">
                             Giống cây trồng
                           </p>
-                          <p className="text-lg">
+                          <p className="text-[15px]">
                             {data.variety || "Bản địa"}
                           </p>
                         </div>
@@ -222,7 +222,7 @@ export default function Product() {
                           <p className="text-[14px] font-medium text-[#4a6d5d]/70 mb-1">
                             Đơn vị sản xuất
                           </p>
-                          <p className="text-lg">
+                          <p className="text-[15px]">
                             {data.farm_name || "Nông trại địa phương"}
                           </p>
                         </div>
@@ -231,7 +231,7 @@ export default function Product() {
                             Vùng canh tác
                           </p>
                           <div className="flex items-center gap-2 mt-1">
-                            <p className="text-lg">
+                            <p className="text-[15px]">
                               {data.origin}
                             </p>
                           </div>
@@ -254,7 +254,7 @@ export default function Product() {
                       {" "}
                       <div>
                         <div className="flex-1 bg-white rounded-[20px]  p-6 md:p-8">
-                          <div className="grid md:grid-cols-[200px_1fr] gap-8">
+                          <div className="grid md:grid-cols-[200px_1fr] gap-24">
                             {version.image && (
                               <img
                                 src={toImageUrl(version.image)}
@@ -290,15 +290,33 @@ export default function Product() {
                               {renderAdditionalInfo(version.additional_info)}
                               <div className="mt-6 flex flex-1 items-end gap-2">
                                 <span className="text-[14px] text-[#4a6d5d]">
-                                  Mã băm nội dung:
+                                  Nhiệt độ:
                                 </span>
-                                <span className="text-[12px] break-all text-[#4a6d5d]">
+                                <span className="text-[12px] break-all text-[#4a6d5d] line-clamp-1">
+                                  {version.temperature ? `${version.temperature}°C` : version.status !== 'planted' ? 'Không đổi' : "Không có dữ liệu"}
+                                </span>
+                              </div>
+
+                              <div className="mt-6 flex flex-1 items-end gap-2">
+                                <span className="text-[14px] text-[#4a6d5d]">
+                                  Độ ẩm:
+                                </span>
+                                <span className="text-[12px] break-all text-[#4a6d5d] line-clamp-1">
+                                  {version.humidity ? `${version.humidity}%` : version.status !== 'planted' ? 'Không đổi' : "Không có dữ liệu"}
+                                </span>
+                              </div>
+
+                              <div className="mt-6 flex flex-1 items-end gap-2">
+                                <span className="text-[14px] text-[#4a6d5d]">
+                                  Hash:
+                                </span>
+                                <span className="text-[12px] break-all text-[#4a6d5d] line-clamp-1">
                                   {version.hash}
                                 </span>
                               </div>
                               <div className="mt-6 flex flex-1 items-end gap-2">
                                 <span className="text-[14px] text-[#4a6d5d]">
-                                  Mã giao dịch:
+                                  Tx:
                                 </span>
                                 <a
                                   href={`https://coston2-explorer.flare.network/tx/${version.tx_hash}`}

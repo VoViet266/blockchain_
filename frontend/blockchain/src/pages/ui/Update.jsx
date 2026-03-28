@@ -13,6 +13,8 @@ export default function Update() {
   const [status, setStatus] = useState(STATUS_OPTIONS[0].value);
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
+  const [temperature, setTemperature] = useState("");
+  const [humidity, setHumidity] = useState("");
   const [image, setImage] = useState(null);
   const [additionalInfo, setAdditionalInfo] = useState({});
   const [message, setMessage] = useState(
@@ -223,6 +225,8 @@ export default function Update() {
     formData.append("status", status);
     formData.append("description", description);
     formData.append("location", location);
+    if (temperature) formData.append("temperature", temperature);
+    if (humidity) formData.append("humidity", humidity);
     formData.append("additional_info", JSON.stringify(additionalInfo));
     formData.append("image", image);
 
@@ -300,6 +304,30 @@ export default function Update() {
                   className="border-[1px] border-[#285242]/20 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
+                  placeholder="Để trống nếu không đổi"
+                />
+              </label>
+
+              <label className="grid gap-[6px]">
+                <span className="text-[13px] text-[#365748] font-bold uppercase tracking-wider">
+                  Nhiệt độ
+                </span>
+                <input
+                  className="border-[1px] border-[#285242]/20 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
+                  value={temperature}
+                  onChange={(e) => setTemperature(e.target.value)}
+                  placeholder="Để trống nếu không đổi"
+                />
+              </label>
+
+              <label className="grid gap-[6px]">
+                <span className="text-[13px] text-[#365748] font-bold uppercase tracking-wider">
+                  Độ ẩm
+                </span>
+                <input
+                  className="border-[1px] border-[#285242]/20 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
+                  value={humidity}
+                  onChange={(e) => setHumidity(e.target.value)}
                   placeholder="Để trống nếu không đổi"
                 />
               </label>
