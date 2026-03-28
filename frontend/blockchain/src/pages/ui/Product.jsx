@@ -214,6 +214,14 @@ export default function Product() {
                             {data.variety || "Bản địa"}
                           </p>
                         </div>
+                        <div className="flex flex-col">
+                          <p className="text-[14px] font-medium text-[#4a6d5d]/70 mb-1">
+                            Mã số vùng trồng
+                          </p>
+                          <p className="text-[15px]">
+                            {data.plant_area_id || "Chưa xác định"}
+                          </p>
+                        </div>
                       </div>
 
                       {/* Nông trại & Vùng trồng */}

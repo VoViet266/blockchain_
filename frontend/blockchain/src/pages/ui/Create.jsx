@@ -16,6 +16,7 @@ export default function Create() {
   const [variety, setVariety] = useState("");
   const [temperature, setTemperature] = useState("");
   const [humidity, setHumidity] = useState("");
+  const [plantAreaId, setPlantAreaId] = useState("");
   const [farmName, setFarmName] = useState("");
   const [location, setLocation] = useState("");
   const [producer, setProducer] = useState("");
@@ -113,6 +114,7 @@ export default function Create() {
     formData.append("farm_name", farmName.trim());
     formData.append("location", location.trim());
     formData.append("producer", producer.trim());
+    formData.append("plant_area_id", plantAreaId.trim());
     formData.append("origin", origin.trim());
     formData.append("temperature", temperature.trim());
     formData.append("humidity", humidity.trim());
@@ -283,6 +285,17 @@ export default function Create() {
                     value={humidity}
                     onChange={(e) =>setHumidity(e.target.value)}
                     placeholder="VD: 74"
+                  />
+                </label>
+
+                <label className="grid gap-[6px]">
+                  <span className="text-[13px] text-[#4a6d5d] font-bold uppercase tracking-wider">Mã số vùng trồng *</span>
+                  <input
+                    className="border-[1px] border-[#295242]/15 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
+                    value={plantAreaId}
+                    onChange={(e) => setPlantAreaId(e.target.value)}
+                    placeholder="VD: 8648768246584765"
+                    required
                   />
                 </label>
 

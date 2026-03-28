@@ -113,6 +113,7 @@ export const addProductOnChain = async (productData, file) => {
     product_type, variety, farm_name, location, producer, // origin fields
     description, additional_info, // version info
     temperature, humidity, // new fields
+    plant_area_id, // new field
   } = productData;
 
   if (wallet == null) {
@@ -138,6 +139,7 @@ export const addProductOnChain = async (productData, file) => {
     farm_name,
     location,
     producer,
+    plant_area_id,
     owner_wallet: wallet,
   });
 

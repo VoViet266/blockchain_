@@ -188,7 +188,7 @@ export default function ProductScanByUser() {
                           <p className="text-[14px] font-medium text-[#4a6d5d]/70 mb-1">
                             Loại sản phẩm
                           </p>
-                          <p className="text-lg">
+                          <p className="text-[15px]">
                             {data.product_type || "Nông sản"}
                           </p>
                         </div>
@@ -196,8 +196,16 @@ export default function ProductScanByUser() {
                           <p className="text-[14px] font-medium text-[#4a6d5d]/70 mb-1">
                             Giống cây trồng
                           </p>
-                          <p className="text-lg">
+                          <p className="text-[15px]">
                             {data.variety || "Bản địa"}
+                          </p>
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="text-[14px] font-medium text-[#4a6d5d]/70 mb-1">
+                            Mã số vùng trồng
+                          </p>
+                          <p className="text-[15px]">
+                            {data.plant_area_id || "Chưa xác định"}
                           </p>
                         </div>
                       </div>
@@ -208,7 +216,7 @@ export default function ProductScanByUser() {
                           <p className="text-[14px] font-medium text-[#4a6d5d]/70 mb-1">
                             Đơn vị sản xuất
                           </p>
-                          <p className="text-lg">
+                          <p className="text-[15px]">
                             {data.farm_name || "Nông trại địa phương"}
                           </p>
                         </div>
@@ -217,7 +225,7 @@ export default function ProductScanByUser() {
                             Vùng canh tác
                           </p>
                           <div className="flex items-center gap-2 mt-1">
-                            <p className="text-lg">
+                            <p className="text-[15px]">
                               {data.origin}
                             </p>
                           </div>
@@ -293,9 +301,9 @@ export default function ProductScanByUser() {
                               </div>
 
 
-                              <div className="mt-6 flex flex-1 items-end gap-2">
+                              <div className="mt-6 flex flex-1 items-end gap-2 line-clamp-1">
                                 <span className="text-[14px] text-[#4a6d5d]">
-                                  Mã băm nội dung:
+                                  Hash:
                                 </span>
                                 <span className="text-[12px] break-all text-[#4a6d5d]">
                                   {version.hash}
@@ -303,7 +311,7 @@ export default function ProductScanByUser() {
                               </div>
                               <div className="mt-6 flex flex-1 items-end gap-2">
                                 <span className="text-[14px] text-[#4a6d5d]">
-                                  Mã giao dịch:
+                                  Tx:
                                 </span>
                                 <a
                                   href={`https://coston2-explorer.flare.network/tx/${version.tx_hash}`}
