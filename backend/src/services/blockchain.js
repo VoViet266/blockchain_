@@ -182,6 +182,56 @@ export const addProduct = async (productData, file) => {
   }
 };
 
+export const verifyProductIntegrity = async (productId) => {
+  try {
+    if (!contract) throw new Error("Blockchain service chưa khởi tạo.");
+
+    const product = await Product.findByPk(productId, {
+      include: [{ model: ProductVersion, as: "versions" }],
+    });
+
+    if (!product || !product.versions.length) return { success: false, message: "Không tìm thấy DB" };
+
+    const latestVer = product.versions.sort((a, b) => b.version - a.version)[0];
+
+    // --- LOGIC HASH PHẢI KHỚP 100% VỚI HÀM addVerProduct CỦA BẠN ---
+    // Bạn dùng: product.name + product.origin + status + description + infoStr
+    const infoStr = latestVer.additional_info ? JSON.stringify(latestVer.additional_info) : "";
+
+    // Tạo lại chuỗi y hệt như lúc bạn nhấn nút "Update" hoặc "Add"
+    const dataToHash =
+      product.name +
+      product.origin +
+      latestVer.status +
+      (latestVer.description || "") +
+      infoStr;
+
+    // DEBUG: Bạn hãy nhìn vào Terminal (Console) để so sánh chuỗi này
+    console.log("------------------------------------------");
+    console.log("CHUỖI DỮ LIỆU ĐANG ĐƯỢC BĂM:", `"${dataToHash}"`);
+    console.log("------------------------------------------");
+
+    const dbCalculatedHash = crypto.createHash("sha256").update(dataToHash).digest("hex");
+
+    const productOnChain = await contract.getProduct(productId);
+    const onChainHash = productOnChain[2];
+
+    const normalize = (h) => (h ? h.toLowerCase().replace(/^0x/, "") : "");
+    const isValid = normalize(dbCalculatedHash) === normalize(onChainHash);
+
+    return {
+      success: true,
+      isValid,
+      data: {
+        dbCalculatedHash: "0x" + dbCalculatedHash,
+        onChainHash: onChainHash.startsWith("0x") ? onChainHash : "0x" + onChainHash,
+      }
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const addVerProduct = async (body, file) => {
   try {
     const { id, status, description, location, additional_info } = body;
