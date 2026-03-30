@@ -27,82 +27,72 @@ const initBlockchain = () => {
   }
 };
 
+
+// Lắng nghe sự kiện từ blockchain và cập nhật database tương ứng
 const listenToEvents = () => {
   if (!contract) return;
 
-  contract.on("ProductAdded", async (uuid, owner, hash, event) => {
-    try {
-      console.log(`ProductAdded: uuid=${uuid}, owner=${owner}, hash=${hash}`);
+  const hasEvent = (eventName) =>
+    ABI.some((fragment) => fragment.type === "event" && fragment.name === eventName);
 
-      const txHash = event.log.transactionHash;
-
-      // Tìm sản phẩm theo id (uuid trên blockchain)
-      const productId = uuid;
-
-      const product = await Product.findByPk(productId);
-      if (product) {
-        // Cập nhật ví chủ sở hữu từ sự kiện
-        await product.update({ owner_wallet: owner });
-
-        // Cập nhật tx_hash cho version tương ứng
-        await ProductVersion.update(
-          { tx_hash: txHash },
-          {
-            where: {
-              product_id: productId,
-              hash: hash,
-            },
-          },
-        );
-        console.log(`Updated Product ${productId} with txHash ${txHash}`);
-      } else {
-        console.warn(
-          `Product ${productId} not found in DB when event received.`,
-        );
-      }
-    } catch (error) {
-      console.error("Error handling ProductAdded event:", error);
-    }
-  });
-
-  contract.on("ProductUpdated", async (uuid, newHash, event) => {
-    try {
-      console.log(`ProductUpdated: uuid=${uuid}, newHash=${newHash}`);
-      const txHash = event.log.transactionHash;
-      const productId = uuid;
-
-      await ProductVersion.update(
-        { tx_hash: txHash },
-        {
-          where: {
-            product_id: productId,
-            hash: newHash,
-          },
-        },
-      );
-      console.log(`Updated ProductVersion ${productId} with txHash ${txHash}`);
-    } catch (error) {
-      console.error("Error handling ProductUpdated event:", error);
-    }
-  });
-
-  contract.on(
-    "OwnershipTransferred",
-    async (uuid, oldOwner, newOwner, event) => {
+  if (hasEvent("ProductAdded")) {
+    contract.on("ProductAdded", async (uuid, owner, hash, event) => {
       try {
-        console.log(`OwnershipTransferred: uuid=${uuid}, newOwner=${newOwner}`);
-        const productId = uuid.startsWith("0x") ? uuid.slice(2) : uuid;
+        console.log(`ProductAdded: uuid=${uuid}, owner=${owner}, hash=${hash}`);
+
+        const txHash = event.log.transactionHash;
+        const productId = uuid;
 
         const product = await Product.findByPk(productId);
         if (product) {
-          await product.update({ owner_wallet: newOwner });
-          console.log(`Updated Product ${productId} owner to ${newOwner}`);
+          await product.update({ owner_wallet: owner });
+
+          await ProductVersion.update(
+            { tx_hash: txHash },
+            {
+              where: {
+                product_id: productId,
+                hash: hash,
+              },
+            },
+          );
+          console.log(`Updated Product ${productId} with txHash ${txHash}`);
+        } else {
+          console.warn(`Product ${productId} not found in DB when event received.`);
         }
       } catch (error) {
-        console.error("Error handling OwnershipTransferred event:", error);
+        console.error("Error handling ProductAdded event:", error);
       }
-    },
-  );
+    });
+  }
+
+  if (hasEvent("ProductVersionAdded")) {
+    contract.on(
+      "ProductVersionAdded",
+      async (uuid, version, dataHash, event) => {
+        try {
+          console.log(
+            `ProductVersionAdded: uuid=${uuid}, version=${version}, dataHash=${dataHash}`,
+          );
+          const txHash = event.log.transactionHash;
+          const productId = uuid;
+
+          await ProductVersion.update(
+            { tx_hash: txHash },
+            {
+              where: {
+                product_id: productId,
+                hash: dataHash,
+              },
+            },
+          );
+          console.log(`Updated ProductVersion ${productId} with txHash ${txHash}`);
+        } catch (error) {
+          console.error("Error handling ProductVersionAdded event:", error);
+        }
+      },
+    );
+  }
 };
 
 export const addProduct = async (productData, file) => {
@@ -150,7 +140,7 @@ export const addProduct = async (productData, file) => {
   });
 
   try {
-    // Stringify additional info for hash calculation
+
     const infoStr = additional_info ? JSON.stringify(additional_info) : "";
     const data = productData + infoStr;
     const hashValue = crypto.createHash("sha256").update(data).digest("hex");
