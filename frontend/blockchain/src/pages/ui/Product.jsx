@@ -9,6 +9,7 @@ export default function Product() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isExactData, setIsExactData] = useState(true);
 
   const latestVersion = useMemo(() => {
     if (!data?.versions?.length) return null;
@@ -34,6 +35,11 @@ export default function Product() {
         const response = await getProductDetail(id);
         setData(response);
       } catch (fetchError) {
+        if (fetchError.response?.status === 409) {
+          setIsExactData(false);
+          setError('Dữ liệu sản phẩm không chính xác. Vui lòng liên hệ nhà sản xuất để biết thêm chi tiết.');
+          return;
+        }
         setError(
           fetchError?.response?.data?.detail ||
           "Không thể tải thông tin sản phẩm.",
@@ -157,7 +163,7 @@ export default function Product() {
             </div>
           )}
           {error && (
-            <div className="bg-red-50 text-red-600 p-6 rounded-2xl border border-red-100">
+            <div className="bg-red-50 text-red-600 p-6 min-h-50 flex items-center justify-center rounded-2xl border border-red-100">
               {error}
             </div>
           )}
@@ -347,7 +353,7 @@ export default function Product() {
           )}
         </main>
 
-        <aside className="space-y-6">
+        <aside className={`${isExactData && !loading ? '' : 'hidden'} space-y-6`}>
           <div className="bg-white rounded-[20px] p-20 border border-[#274c3d]/10 shadow-lg sticky">
             <h4 className="text-2xl font-semibold text-[#163629] mb-10 flex items-center gap-2">
               Chứng thực số
