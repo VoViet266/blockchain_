@@ -36,6 +36,31 @@
       {
         "indexed": false,
         "internalType": "address",
+        "name": "oldOwner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "uuid",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
         "name": "owner",
         "type": "address"
       },
@@ -60,18 +85,12 @@
       },
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "version",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
         "internalType": "string",
-        "name": "dataHash",
+        "name": "newHash",
         "type": "string"
       }
     ],
-    "name": "ProductVersionAdded",
+    "name": "ProductUpdated",
     "type": "event"
   },
   {
@@ -88,24 +107,6 @@
       }
     ],
     "name": "addProduct",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_uuid",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_dataHash",
-        "type": "string"
-      }
-    ],
-    "name": "addProductVersion",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -161,6 +162,24 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_uuid",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_newHash",
+        "type": "string"
+      }
+    ],
+    "name": "updateProduct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

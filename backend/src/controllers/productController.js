@@ -8,7 +8,7 @@ import {
 
 export const verifyProductData = async (req, res) => {
   try {
-    const { id } = req.params; // Lấy UUID từ đường dẫn /api/products/verify/:id
+    const { id } = req.params; // Hoặc req.body.id tùy vào cách bạn gửi dữ liệu
 
     if (!id) {
       return res.status(400).json({

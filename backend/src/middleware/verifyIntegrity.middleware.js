@@ -18,8 +18,6 @@ export const integrityCheck = async (req, res, next) => {
                 details: result.data
             });
         }
-
-        // Nếu dữ liệu khớp, cho phép đi tiếp vào Controller
         console.log(`[Integrity Check] Product ${productId}: PASSED`);
         next();
     } catch (error) {

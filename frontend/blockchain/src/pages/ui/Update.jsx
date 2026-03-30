@@ -243,9 +243,7 @@ export default function Update() {
         `Cập nhật sản phẩm thành công! TxHash: ${txHash.slice(0, 10)}...`,
       );
       setImage(null);
-      setTimeout(() => {
-        navigate(`/product/${productId.trim()}`);
-      }, 2000);
+      navigate(`/product/${productId.trim()}`);
     } catch (error) {
       if (!error?.response) {
         setMessage("Không kết nối được backend.");
@@ -430,17 +428,14 @@ export default function Update() {
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
-                  <>
-              
-                    Đang ký giao dịch...
-                  </>
+                  <>Đang ký giao dịch...</>
                 ) : (
                   "Gửi lên Blockchain"
                 )}
               </button>
             </div>
           </form>
-        </section>  
+        </section>
       </div>
     </div>
   );

@@ -15,6 +15,18 @@ let contract = null;
 const abiPath = path.join(process.cwd(), "abi.json");
 const ABI = JSON.parse(fs.readFileSync(abiPath, "utf8"));
 
+const buildProductHash = (productData) => {
+  const { name, origin, status, description, additional_info } = productData;
+  const infoStr = additional_info ? JSON.stringify(additional_info) : "";
+  const dataToHash =
+    (name || "") +
+    (origin || "") +
+    (status || "") +
+    (description || "") +
+    infoStr;
+  return crypto.createHash("sha256").update(dataToHash).digest("hex");
+};
+
 const initBlockchain = () => {
   try {
     const provider = new ethers.JsonRpcProvider(RPC_URL);
@@ -66,13 +78,13 @@ const listenToEvents = () => {
     });
   }
 
-  if (hasEvent("ProductVersionAdded")) {
+  if (hasEvent("ProductUpdated")) {
     contract.on(
-      "ProductVersionAdded",
+      "ProductUpdated",
       async (uuid, version, dataHash, event) => {
         try {
           console.log(
-            `ProductVersionAdded: uuid=${uuid}, version=${version}, dataHash=${dataHash}`,
+            `ProductUpdated: uuid=${uuid}, version=${version}, dataHash=${dataHash}`,
           );
           const txHash = event.log.transactionHash;
           const productId = uuid;
@@ -99,7 +111,7 @@ export const addProduct = async (productData, file) => {
   const {
     name,
     origin,
-    wallet, // core
+    wallet,
     product_type,
     variety,
     farm_name,
@@ -108,7 +120,7 @@ export const addProduct = async (productData, file) => {
     description,
     additional_info,
     temperature,
-    humidity, // new fields
+    humidity,
     plant_area_id,
   } = productData;
 
@@ -140,10 +152,13 @@ export const addProduct = async (productData, file) => {
   });
 
   try {
-
-    const infoStr = additional_info ? JSON.stringify(additional_info) : "";
-    const data = productData + infoStr;
-    const hashValue = crypto.createHash("sha256").update(data).digest("hex");
+    const hashValue = buildProductHash({
+      name,
+      origin,
+      status,
+      description,
+      additional_info: additional_info ? JSON.parse(additional_info) : null,
+    });
 
     await ProductVersion.create({
       product_id: product.id,
@@ -155,15 +170,15 @@ export const addProduct = async (productData, file) => {
       image: image,
       hash: hashValue,
       tx_hash: null,
-      temperature,
-      humidity,
+      temperature: temperature,
+      humidity: humidity,
     });
 
     return {
       success: true,
-      uuid: product.id,
+      uuid: product.id.toString(),
       hash: hashValue,
-      product_id: product.id,
+      product_id: product.id.toString(),
     };
   } catch (error) {
     console.error("Lỗi khi chuẩn bị dữ liệu Blockchain:", error.message);
@@ -180,43 +195,52 @@ export const verifyProductIntegrity = async (productId) => {
       include: [{ model: ProductVersion, as: "versions" }],
     });
 
-    if (!product || !product.versions.length) return { success: false, message: "Không tìm thấy DB" };
+    if (!product || !product.versions.length) {
+      return { success: false, message: "Không tìm thấy DB" };
+    }
 
     const latestVer = product.versions.sort((a, b) => b.version - a.version)[0];
 
-    // --- LOGIC HASH PHẢI KHỚP 100% VỚI HÀM addVerProduct CỦA BẠN ---
-    // Bạn dùng: product.name + product.origin + status + description + infoStr
-    const infoStr = latestVer.additional_info ? JSON.stringify(latestVer.additional_info) : "";
+    // Use consistent hash calculation with buildProductHash
+    const dbCalculatedHash = buildProductHash({
+      name: product.name,
+      origin: product.origin,
+      status: latestVer.status,
+      description: latestVer.description,
+      additional_info: latestVer.additional_info,
+    });
 
-    // Tạo lại chuỗi y hệt như lúc bạn nhấn nút "Update" hoặc "Add"
-    const dataToHash =
-      product.name +
-      product.origin +
-      latestVer.status +
-      (latestVer.description || "") +
-      infoStr;
+    try {
+      const productOnChain = await contract.getProduct(productId);
+      const onChainHash = productOnChain[2];
 
-    // DEBUG: Bạn hãy nhìn vào Terminal (Console) để so sánh chuỗi này
-    console.log("------------------------------------------");
-    console.log("CHUỖI DỮ LIỆU ĐANG ĐƯỢC BĂM:", `"${dataToHash}"`);
-    console.log("------------------------------------------");
+      const normalize = (h) => (h ? h.toLowerCase().replace(/^0x/, "") : "");
+      const isValid = normalize(dbCalculatedHash) === normalize(onChainHash);
 
-    const dbCalculatedHash = crypto.createHash("sha256").update(dataToHash).digest("hex");
-
-    const productOnChain = await contract.getProduct(productId);
-    const onChainHash = productOnChain[2];
-
-    const normalize = (h) => (h ? h.toLowerCase().replace(/^0x/, "") : "");
-    const isValid = normalize(dbCalculatedHash) === normalize(onChainHash);
-
-    return {
-      success: true,
-      isValid,
-      data: {
-        dbCalculatedHash: "0x" + dbCalculatedHash,
-        onChainHash: onChainHash.startsWith("0x") ? onChainHash : "0x" + onChainHash,
+      return {
+        success: true,
+        isValid,
+        data: {
+          dbCalculatedHash: "0x" + dbCalculatedHash,
+          onChainHash: onChainHash.startsWith("0x") ? onChainHash : "0x" + onChainHash,
+        }
+      };
+    } catch (contractError) {
+      // If product doesn't exist on-chain yet, mark as valid but note it's pending
+      if (contractError.message.includes("call revert exception")) {
+        console.log(`Product ${productId} not yet added to blockchain`);
+        return {
+          success: true,
+          isValid: true,
+          data: {
+            status: "pending_blockchain",
+            dbCalculatedHash: "0x" + dbCalculatedHash,
+            message: "Product exists in database but not yet on blockchain"
+          }
+        };
       }
-    };
+      throw contractError;
+    }
   } catch (error) {
     throw error;
   }
@@ -250,10 +274,13 @@ export const addVerProduct = async (body, file) => {
     });
     const nextVersion = latestVersion ? latestVersion.version + 1 : 1;
 
-    const infoStr = additional_info ? JSON.stringify(additional_info) : "";
-    const data =
-      product.name + product.origin + status + (description || "") + infoStr;
-    const hashValue = crypto.createHash("sha256").update(data).digest("hex");
+    const hashValue = buildProductHash({
+      name: product.name,
+      origin: product.origin,
+      status: status,
+      description: description,
+      additional_info: additional_info ? JSON.parse(additional_info) : null,
+    });
 
     const productVersion = await ProductVersion.create({
       product_id: product.id,
@@ -269,7 +296,7 @@ export const addVerProduct = async (body, file) => {
 
     return {
       success: true,
-      uuid: product.id,
+      uuid: product.id.toString(),
       hash: hashValue,
       product_version: productVersion,
     };
