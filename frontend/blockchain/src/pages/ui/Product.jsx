@@ -353,7 +353,7 @@ export default function Product() {
           )}
         </main>
 
-        <aside className={`${isExactData && !loading ? '' : 'hidden'} space-y-6`}>
+        <aside className={`${!isExactData || loading || error ? 'hidden' : ''} space-y-6`}>
           <div className="bg-white rounded-[20px] p-20 border border-[#274c3d]/10 shadow-lg sticky">
             <h4 className="text-2xl font-semibold text-[#163629] mb-10 flex items-center gap-2">
               Chứng thực số
