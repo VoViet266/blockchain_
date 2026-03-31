@@ -93,15 +93,61 @@ export default function Create() {
       unsubscribe();
     };
   }, []);
-
+// Validation tạo sản phẩm submit form
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!name.trim() || !origin.trim() || !image) {
-      setStatus("Vui lòng nhập đầy đủ Tên, Xuất xứ và chọn ảnh sản phẩm.");
+        // helper
+    const isNumber = (val) => !isNaN(val) && val !== "";
+    const latLongRegex = /^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/;
+
+    // 1. tên sản phẩm
+    if (!name.trim() || name.trim().length < 3) {
+      setStatus("Tên sản phẩm phải ≥ 3 ký tự.");
       return;
     }
 
+    // 2. mã vùng trồng
+    if (!plantAreaId.trim() || !/^\d+$/.test(plantAreaId)) {
+      setStatus("Mã số vùng trồng phải là số.");
+      return;
+    }
+
+    // 3. vùng trồng
+    if (!origin.trim()) {
+      setStatus("Vui lòng nhập vùng trồng.");
+      return;
+    }
+
+    // 4. tọa độ
+    if (location && !latLongRegex.test(location)) {
+      setStatus("Tọa độ phải dạng: 10.123, 105.456");
+      return;
+    }
+
+    // 5. nhiệt độ
+    if (temperature && (!isNumber(temperature) || temperature < -50 || temperature > 100)) {
+      setStatus("Nhiệt độ phải từ -50 đến 100°C.");
+      return;
+    }
+
+    // 6. độ ẩm
+    if (humidity && (!isNumber(humidity) || humidity < 0 || humidity > 100)) {
+      setStatus("Độ ẩm phải từ 0% đến 100%.");
+      return;
+    }
+
+    // 7. ảnh
+    if (!image) {
+      setStatus("Vui lòng chọn ảnh.");
+      return;
+    }
+
+    if (!["image/jpeg", "image/png"].includes(image.type)) {
+      setStatus("Chỉ chấp nhận ảnh JPG hoặc PNG.");
+      return;
+    }
+    // 8. ví
     if (!wallet) {
       setStatus("Vui lòng kết nối ví trước khi tạo sản phẩm.");
       return;
@@ -292,6 +338,7 @@ export default function Create() {
                   </span>
                   <input
                     className="border-[1px] border-[#295242]/15 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
+                    type="number"
                     value={temperature}
                     onChange={(e) => setTemperature(e.target.value)}
                     placeholder="VD: 25.5"
