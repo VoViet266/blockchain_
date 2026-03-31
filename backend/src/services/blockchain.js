@@ -39,13 +39,14 @@ const initBlockchain = () => {
   }
 };
 
-
 // Lắng nghe sự kiện từ blockchain và cập nhật database tương ứng
 const listenToEvents = () => {
   if (!contract) return;
 
   const hasEvent = (eventName) =>
-    ABI.some((fragment) => fragment.type === "event" && fragment.name === eventName);
+    ABI.some(
+      (fragment) => fragment.type === "event" && fragment.name === eventName,
+    );
 
   if (hasEvent("ProductAdded")) {
     contract.on("ProductAdded", async (uuid, owner, hash, event) => {
@@ -70,7 +71,9 @@ const listenToEvents = () => {
           );
           console.log(`Updated Product ${productId} with txHash ${txHash}`);
         } else {
-          console.warn(`Product ${productId} not found in DB when event received.`);
+          console.warn(
+            `Product ${productId} not found in DB when event received.`,
+          );
         }
       } catch (error) {
         console.error("Error handling ProductAdded event:", error);
@@ -79,31 +82,30 @@ const listenToEvents = () => {
   }
 
   if (hasEvent("ProductUpdated")) {
-    contract.on(
-      "ProductUpdated",
-      async (uuid, version, dataHash, event) => {
-        try {
-          console.log(
-            `ProductUpdated: uuid=${uuid}, version=${version}, dataHash=${dataHash}`,
-          );
-          const txHash = event.log.transactionHash;
-          const productId = uuid;
+    contract.on("ProductUpdated", async (uuid, version, dataHash, event) => {
+      try {
+        console.log(
+          `ProductUpdated: uuid=${uuid}, version=${version}, dataHash=${dataHash}`,
+        );
+        const txHash = event.log.transactionHash;
+        const productId = uuid;
 
-          await ProductVersion.update(
-            { tx_hash: txHash },
-            {
-              where: {
-                product_id: productId,
-                hash: dataHash,
-              },
+        await ProductVersion.update(
+          { tx_hash: txHash },
+          {
+            where: {
+              product_id: productId,
+              hash: dataHash,
             },
-          );
-          console.log(`Updated ProductVersion ${productId} with txHash ${txHash}`);
-        } catch (error) {
-          console.error("Error handling ProductVersionAdded event:", error);
-        }
-      },
-    );
+          },
+        );
+        console.log(
+          `Updated ProductVersion ${productId} with txHash ${txHash}`,
+        );
+      } catch (error) {
+        console.error("Error handling ProductVersionAdded event:", error);
+      }
+    });
   }
 };
 
@@ -188,6 +190,7 @@ export const addProduct = async (productData, file) => {
 };
 
 export const verifyProductIntegrity = async (productId) => {
+  console.log("Verifying product integrity for product ID:", productId);
   try {
     if (!contract) throw new Error("Blockchain service chưa khởi tạo.");
 
@@ -196,12 +199,10 @@ export const verifyProductIntegrity = async (productId) => {
     });
 
     if (!product || !product.versions.length) {
-      return { success: false, message: "Không tìm thấy DB" };
+      return { success: false, isValid: false, message: "Không tìm thấy DB", data: {} };
     }
 
     const latestVer = product.versions.sort((a, b) => b.version - a.version)[0];
-
-    // Use consistent hash calculation with buildProductHash
     const dbCalculatedHash = buildProductHash({
       name: product.name,
       origin: product.origin,
@@ -222,12 +223,17 @@ export const verifyProductIntegrity = async (productId) => {
         isValid,
         data: {
           dbCalculatedHash: "0x" + dbCalculatedHash,
-          onChainHash: onChainHash.startsWith("0x") ? onChainHash : "0x" + onChainHash,
-        }
+          onChainHash: onChainHash.startsWith("0x")
+            ? onChainHash
+            : "0x" + onChainHash,
+        },
       };
     } catch (contractError) {
-      // If product doesn't exist on-chain yet, mark as valid but note it's pending
-      if (contractError.message.includes("call revert exception")) {
+      const isRevert =
+        contractError.code === "CALL_EXCEPTION" ||
+        (contractError.message && contractError.message.includes("call revert exception"));
+
+      if (isRevert) {
         console.log(`Product ${productId} not yet added to blockchain`);
         return {
           success: true,
@@ -235,8 +241,8 @@ export const verifyProductIntegrity = async (productId) => {
           data: {
             status: "pending_blockchain",
             dbCalculatedHash: "0x" + dbCalculatedHash,
-            message: "Product exists in database but not yet on blockchain"
-          }
+            message: "Product exists in database but not yet on blockchain",
+          },
         };
       }
       throw contractError;
