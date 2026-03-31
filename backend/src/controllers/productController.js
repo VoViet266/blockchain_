@@ -3,7 +3,8 @@ import {
   addVerProduct,
   getProductHistoryOnChain,
   getMyProductsOnChain,
-  verifyProductIntegrity
+  verifyProductIntegrity,
+  generateProductHash
 } from "../services/blockchain.js";
 
 export const verifyProductData = async (req, res) => {
@@ -53,6 +54,15 @@ export const verifyProductData = async (req, res) => {
       success: false,
       message: error.message || "Đã xảy ra lỗi trong quá trình xác thực dữ liệu."
     });
+  }
+};
+
+export const generateHash = async (req, res) => {
+  try {
+    const result = await generateProductHash(req.body, req.file);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -111,6 +121,7 @@ export const getMyProducts = async (req, res) => {
 };
 
 export default {
+  generateHash,
   createProduct,
   updateProduct,
   getProductHistory,

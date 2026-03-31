@@ -109,8 +109,47 @@ const listenToEvents = () => {
   }
 };
 
-export const addProduct = async (productData, file) => {
+
+export const generateProductHash = async (productData, file) => {
   const {
+    name,
+    origin,
+    description,
+    additional_info,
+  } = productData;
+
+  const status = "PLANTED";
+
+  let image = null;
+  if (file) {
+    const uploadResult = await pinataService.uploadFileToIPFS(
+      file.path,
+      file.originalname,
+    );
+    image = uploadResult.ipfsUrl;
+  }
+
+  const hashValue = buildProductHash({
+    name,
+    origin,
+    status,
+    description,
+    additional_info: additional_info ? JSON.parse(additional_info) : null,
+  });
+
+  return {
+    uuid: crypto.randomUUID(),
+    hash: hashValue,
+    image,
+    status,
+  };
+};
+
+export const addProduct = async (productData) => {
+  const {
+    uuid,
+    hash,
+    txHash,
     name,
     origin,
     wallet,
@@ -124,24 +163,29 @@ export const addProduct = async (productData, file) => {
     temperature,
     humidity,
     plant_area_id,
+    image,
   } = productData;
 
-  if (wallet == null) {
-    throw new Error("Missing wallet address.");
-  }
-  const status = "PLANTED";
-
-  let image = null;
-  if (file) {
-    const uploadResult = await pinataService.uploadFileToIPFS(
-      file.path,
-      file.originalname,
-    );
-    image = uploadResult.ipfsUrl;
+  if (!txHash) {
+    throw new Error("Transaction chưa được xác nhận.");
   }
 
-  // Create Product with new fields
+  // (optional nhưng nên có)
+  const serverHash = buildProductHash({
+    name,
+    origin,
+    status: "PLANTED",
+    description,
+    additional_info: additional_info ? JSON.parse(additional_info) : null,
+  });
+
+  if (serverHash !== hash) {
+    throw new Error("Hash không hợp lệ!");
+  }
+
+  // ✅ Lúc này mới tạo DB
   const product = await Product.create({
+    id: uuid,
     name,
     origin,
     product_type,
@@ -153,40 +197,24 @@ export const addProduct = async (productData, file) => {
     owner_wallet: wallet,
   });
 
-  try {
-    const hashValue = buildProductHash({
-      name,
-      origin,
-      status,
-      description,
-      additional_info: additional_info ? JSON.parse(additional_info) : null,
-    });
+  await ProductVersion.create({
+    product_id: product.id,
+    version: 1,
+    status: "PLANTED",
+    description,
+    additional_info: additional_info ? JSON.parse(additional_info) : null,
+    location,
+    image,
+    hash,
+    tx_hash: txHash,
+    temperature,
+    humidity,
+  });
 
-    await ProductVersion.create({
-      product_id: product.id,
-      version: 1,
-      status: status,
-      description: description,
-      additional_info: additional_info ? JSON.parse(additional_info) : null,
-      location: location,
-      image: image,
-      hash: hashValue,
-      tx_hash: null,
-      temperature: temperature,
-      humidity: humidity,
-    });
-
-    return {
-      success: true,
-      uuid: product.id.toString(),
-      hash: hashValue,
-      product_id: product.id.toString(),
-    };
-  } catch (error) {
-    console.error("Lỗi khi chuẩn bị dữ liệu Blockchain:", error.message);
-    await product.destroy();
-    throw error;
-  }
+  return {
+    success: true,
+    uuid: product.id,
+  };
 };
 
 export const verifyProductIntegrity = async (productId) => {

@@ -9,6 +9,11 @@ export const createProduct = async (formData) => {
   return response.data;
 };
 
+export const generateHash = async (formData) => {
+  const response = await axiosInstance.post("/generate-hash/", formData);
+  return response.data;
+}
+
 export const updateProduct = async (formData) => {
   const response = await axiosInstance.post("/update/", formData);
   return response.data;
