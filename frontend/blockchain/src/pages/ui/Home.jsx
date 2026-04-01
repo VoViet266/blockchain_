@@ -32,6 +32,8 @@ export default function Home() {
 
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
   const [productsError, setProductsError] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 6;
 
   const shortWallet = useMemo(() => {
     if (!wallet) return "Chưa kết nối";
@@ -39,6 +41,7 @@ export default function Home() {
   }, [wallet]);
 
   const filteredProducts = useMemo(() => {
+    setCurrentPage(1);
     return products.filter((item) => {
       const matchesSearch =
         item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -49,6 +52,14 @@ export default function Home() {
       return matchesSearch && matchesStatus;
     });
   }, [products, searchQuery, statusFilter]);
+
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return filteredProducts.slice(startIndex, endIndex);
+  }, [filteredProducts, currentPage]);
+
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
 
   const connectWallet = async () => {
     try {
@@ -148,15 +159,6 @@ export default function Home() {
 
     fetchWalletProducts();
   }, [wallet]);
-
-  const toImageUrl = (imagePath) => {
-    if (!imagePath) return "";
-    try {
-      return new URL(imagePath, API.defaults.baseURL).toString();
-    } catch {
-      return imagePath;
-    }
-  };
 
   return (
     <div className="min-h-[100vh] p-[24px] font-sf-pro text-[#21352c] overflow-x-hidden bg-[radial-gradient(circle_at_12%_18%,rgba(255,196,95,0.28),transparent_42%),radial-gradient(circle_at_88%_12%,rgba(28,127,91,0.2),transparent_40%),linear-gradient(150deg,#f7f4e8_0%,#eef3dc_50%,#dff0e4_100%)]">
@@ -325,41 +327,80 @@ export default function Home() {
             !productsError &&
             products.length > 0 &&
             Array.isArray(products) && (
-              <div
-                className={`grid grid-cols-1 ${filteredProducts.length === 0 ? "md:grid-cols-1" : "md:grid-cols-3"} gap-[12px]`}
-              >
-                {filteredProducts.length === 0 && (
-                  <div className="rounded-[12px] border-[1px] w-full min-h-200 flex items-center justify-center border-[#d6e9de] bg-[#f6fbf8] text-[#355f4f] p-[12px] text-[14px]">
-                    Không tìm thấy sản phẩm nào khớp với tiêu chí tìm kiếm và
-                    lọc.
+              <>
+                <div
+                  className={`grid grid-cols-1 ${filteredProducts.length === 0 ? "md:grid-cols-1" : "md:grid-cols-3"} gap-[12px]`}
+                >
+                  {filteredProducts.length === 0 && (
+                    <div className="rounded-[12px] border-[1px] w-full min-h-200 flex items-center justify-center border-[#d6e9de] bg-[#f6fbf8] text-[#355f4f] p-[12px] text-[14px]">
+                      Không tìm thấy sản phẩm nào khớp với tiêu chí tìm kiếm và
+                      lọc.
+                    </div>
+                  )}
+                  {paginatedProducts.map((item) => (
+                    <Link
+                      key={item.id}
+                      className="grid gap-[10px] rounded-[18px] bg-white/82 border-[1px] border-[#23493c]/14 p-[12px] text-inherit no-underline transition-all duration-200 hover:-translate-y-[3px] hover:shadow-[0_14px_24px_rgba(35,73,60,0.12)]"
+                      to={`/product/${item.id}`}
+                    >
+                      <div className="w-full h-[170px]">
+                        <img
+                          className="w-full h-[170px] object-cover rounded-[12px] border-[1px] border-[#d7e8de] bg-[#f0f6f2] min-h-[150px]"
+                          src={item.latest_version?.image}
+                          alt={`Product ${item.name}`}
+                        />
+                      </div>
+                      <div>
+                        <h3 className="m-0 font-bold text-[#1f4134] text-[17px]">
+                          {item.name}
+                        </h3>
+                        <p className="m-0 text-[#3d6051] text-[13px] leading-[1.5]">
+                          Nguồn gốc: {item.origin}
+                        </p>
+                        <span className="w-fit rounded-[9px] px-[9px] py-[6px] text-[11px]  uppercase border-[1px] border-[#cfe5d8] text-[#266044] bg-[#ecf8f1] font-bold">
+                          {STATUS_OPTIONS_MAP[item.latest_version?.status] ||
+                            "NO STATUS"}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+
+                {/* phân trang */}
+                {filteredProducts.length > 0 && (
+                  <div className="flex justify-center items-center gap-[8px] mt-[24px]">
+                    <button
+                      className={`px-[12px] py-[8px] rounded-[8px] font-medium transition-all ${
+                        currentPage === 1
+                          ? "bg-[#e0e0e0] text-[#888] cursor-not-allowed"
+                          : "bg-[#266044] text-white hover:bg-[#1a3a30]"
+                      }`}
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.max(1, prev - 1))
+                      }
+                      disabled={currentPage === 1}
+                    >
+                      Trang trước
+                    </button>
+                    <span className="text-[#266044] font-medium px-[12px] py-[8px]">
+                      {currentPage} / {totalPages}
+                    </span>
+                    <button
+                      className={`px-[12px] py-[8px] rounded-[8px] font-medium transition-all ${
+                        currentPage === totalPages
+                          ? "bg-[#e0e0e0] text-[#888] cursor-not-allowed"
+                          : "bg-[#266044] text-white hover:bg-[#1a3a30]"
+                      }`}
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                      }
+                      disabled={currentPage === totalPages}
+                    >
+                      Trang sau
+                    </button>
                   </div>
                 )}
-                {filteredProducts.map((item) => (
-                  <Link
-                    key={item.id}
-                    className="grid gap-[10px] rounded-[18px] bg-white/82 border-[1px] border-[#23493c]/14 p-[12px] text-inherit no-underline transition-all duration-200 hover:-translate-y-[3px] hover:shadow-[0_14px_24px_rgba(35,73,60,0.12)]"
-                    to={`/product/${item.id}`}
-                  >
-                    {item.latest_version?.image && (
-                      <img
-                        className="w-full h-[150px] object-cover rounded-[12px] border-[1px] border-[#d7e8de] bg-[#f0f6f2]"
-                        src={toImageUrl(item.latest_version.image)}
-                        alt={`Product ${item.name}`}
-                      />
-                    )}
-                    <h3 className="m-0 font-bold text-[#1f4134] text-[17px]">
-                      {item.name}
-                    </h3>
-                    <p className="m-0 text-[#3d6051] text-[13px] leading-[1.5]">
-                      Origin: {item.origin}
-                    </p>
-                    <span className="w-fit rounded-[999px] px-[9px] py-[5px] text-[11px] tracking-wider uppercase border-[1px] border-[#cfe5d8] text-[#266044] bg-[#ecf8f1] font-bold">
-                      {STATUS_OPTIONS_MAP[item.latest_version?.status] ||
-                        "NO STATUS"}
-                    </span>
-                  </Link>
-                ))}
-              </div>
+              </>
             )}
         </section>
       </div>
