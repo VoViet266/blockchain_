@@ -24,6 +24,17 @@ export default function Create() {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [wallet, setWallet] = useState("");
+  // State lỗi theo từng trường
+  const [errors, setErrors] = useState({
+    name: "",
+    plantAreaId: "",
+    origin: "",
+    location: "",
+    temperature: "",
+    humidity: "",
+    image: "",
+    wallet: "",
+  });
   const [status, setStatus] = useState(
     "Điền thông tin và kết nối ví để tạo sản phẩm.",
   );
@@ -93,63 +104,96 @@ export default function Create() {
       unsubscribe();
     };
   }, []);
+  // Reset tất cả lỗi
+  const resetErrors = () => {
+    setErrors({
+      name: "",
+      plantAreaId: "",
+      origin: "",
+      location: "",
+      temperature: "",
+      humidity: "",
+      image: "",
+      wallet: "",
+    });
+  };
 // Validation tạo sản phẩm submit form
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-        // helper
-    const isNumber = (val) => !isNaN(val) && val !== "";
+    resetErrors();   // ← Quan trọng: reset lỗi trước khi kiểm tra
+
+    // helper
     const latLongRegex = /^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/;
 
-    // 1. tên sản phẩm
+    let hasError = false;
+
+    // 1. Tên sản phẩm
     if (!name.trim() || name.trim().length < 3) {
-      setStatus("Tên sản phẩm phải ≥ 3 ký tự.");
-      return;
+      setErrors(prev => ({ ...prev, name: "Tên sản phẩm phải có ít nhất 3 ký tự." }));
+      hasError = true;
     }
 
-    // 2. mã vùng trồng
+    // 2. Mã số vùng trồng
     if (!plantAreaId.trim() || !/^\d+$/.test(plantAreaId)) {
-      setStatus("Mã số vùng trồng phải là số.");
-      return;
+      setErrors(prev => ({ ...prev, plantAreaId: "Mã số vùng trồng phải là số nguyên dương." }));
+      hasError = true;
     }
 
-    // 3. vùng trồng
+    // 3. Vùng trồng
     if (!origin.trim()) {
-      setStatus("Vui lòng nhập vùng trồng.");
-      return;
+      setErrors(prev => ({ ...prev, origin: "Vui lòng nhập vùng trồng." }));
+      hasError = true;
     }
 
-    // 4. tọa độ
+    // 4. Tọa độ
     if (location && !latLongRegex.test(location)) {
-      setStatus("Tọa độ phải dạng: 10.123, 105.456");
-      return;
+      setErrors(prev => ({ ...prev, location: "Tọa độ phải đúng định dạng: 10.123, 105.456" }));
+      hasError = true;
     }
 
-    // 5. nhiệt độ
-    if (temperature && (!isNumber(temperature) || temperature < -50 || temperature > 100)) {
-      setStatus("Nhiệt độ phải từ -50 đến 100°C.");
-      return;
+    // 5. Nhiệt độ
+    if (temperature) {
+      const tempNum = parseFloat(temperature);
+      if (isNaN(tempNum) || tempNum < -50 || tempNum > 100) {
+        setErrors(prev => ({ 
+          ...prev, 
+          temperature: "Nhiệt độ phải nằm trong khoảng từ -50°C đến 100°C." 
+        }));
+        hasError = true;
+      }
     }
 
-    // 6. độ ẩm
-    if (humidity && (!isNumber(humidity) || humidity < 0 || humidity > 100)) {
-      setStatus("Độ ẩm phải từ 0% đến 100%.");
-      return;
+    // 6. Độ ẩm
+    if (humidity) {
+      const humNum = parseFloat(humidity);
+      if (isNaN(humNum) || humNum < 0 || humNum > 100) {
+        setErrors(prev => ({ 
+          ...prev, 
+          humidity: "Độ ẩm phải nằm trong khoảng từ 0% đến 100%." 
+        }));
+        hasError = true;
+      }
     }
 
-    // 7. ảnh
+    // 7. Ảnh
     if (!image) {
-      setStatus("Vui lòng chọn ảnh.");
-      return;
+      setErrors(prev => ({ ...prev, image: "Vui lòng chọn hình ảnh sản phẩm." }));
+      hasError = true;
+    } else if (!["image/jpeg", "image/png"].includes(image.type)) {
+      setErrors(prev => ({ ...prev, image: "Chỉ chấp nhận file JPG hoặc PNG." }));
+      hasError = true;
     }
 
-    if (!["image/jpeg", "image/png"].includes(image.type)) {
-      setStatus("Chỉ chấp nhận ảnh JPG hoặc PNG.");
-      return;
-    }
-    // 8. ví
+    // 8. Ví
     if (!wallet) {
-      setStatus("Vui lòng kết nối ví trước khi tạo sản phẩm.");
+      setErrors(prev => ({ ...prev, wallet: "Vui lòng kết nối ví MetaMask trước khi tạo sản phẩm." }));
+      hasError = true;
+    }
+
+    // Nếu có lỗi → dừng lại, không submit
+    if (hasError) {
+      setStatus("Vui lòng kiểm tra lại thông tin được đánh dấu đỏ.");
       return;
     }
 
@@ -286,12 +330,16 @@ export default function Create() {
                     Tên sản phẩm *
                   </span>
                   <input
-                    className="border-[1px] border-[#295242]/15 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
+                    className={`border-[1px] rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none transition-all hover:border-[#2a875f]/40
+                      ${errors.name ? "border-red-500 focus:border-red-500" : "border-[#295242]/15 focus:border-[#2a875f]"}`}
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      if (errors.name) setErrors(prev => ({ ...prev, name: "" }));
+                    }}
                     placeholder="VD: Gạo ST25 Premium"
-                    required
                   />
+                  {errors.name && <p className="text-red-500 text-[13px] mt-1">{errors.name}</p>}
                 </label>
 
                 <label className="grid gap-[6px]">
@@ -335,11 +383,16 @@ export default function Create() {
                     Tọa độ / Địa chỉ
                   </span>
                   <input
-                    className="border-[1px] border-[#295242]/15 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
+                    className={`border-[1px] rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none transition-all hover:border-[#2a875f]/40
+                      ${errors.location ? "border-red-500 focus:border-red-500" : "border-[#295242]/15 focus:border-[#2a875f]"}`}
                     value={location}
-                    onChange={(e) => setLocation(e.target.value)}
+                    onChange={(e) => {
+                      setLocation(e.target.value);
+                      if (errors.location) setErrors(prev => ({ ...prev, location: "" }));
+                    }}
                     placeholder="VD: 10.123, 105.456"
                   />
+                  {errors.location && <p className="text-red-500 text-[13px] mt-1">{errors.location}</p>}
                 </label>
 
                 <label className="grid gap-[6px]">
@@ -359,12 +412,17 @@ export default function Create() {
                     Nhiệt độ (°C)
                   </span>
                   <input
-                    className="border-[1px] border-[#295242]/15 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
+                    className={`border-[1px] rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none transition-all hover:border-[#2a875f]/40
+                      ${errors.temperature ? "border-red-500 focus:border-red-500" : "border-[#295242]/15 focus:border-[#2a875f]"}`}
                     type="number"
                     value={temperature}
-                    onChange={(e) => setTemperature(e.target.value)}
+                    onChange={(e) => {
+                      setTemperature(e.target.value);
+                      if (errors.temperature) setErrors(prev => ({ ...prev, temperature: "" }));
+                    }}
                     placeholder="VD: 25.5"
                   />
+                  {errors.temperature && <p className="text-red-500 text-[13px] mt-1">{errors.temperature}</p>}
                 </label>
 
                 <label className="grid gap-[6px]">
@@ -372,11 +430,16 @@ export default function Create() {
                     Độ ẩm (%)
                   </span>
                   <input
-                    className="border-[1px] border-[#295242]/15 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
+                    className={`border-[1px] rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none transition-all hover:border-[#2a875f]/40
+                      ${errors.humidity ? "border-red-500 focus:border-red-500" : "border-[#295242]/15 focus:border-[#2a875f]"}`}
                     value={humidity}
-                    onChange={(e) => setHumidity(e.target.value)}
+                    onChange={(e) => {
+                      setHumidity(e.target.value);
+                      if (errors.humidity) setErrors(prev => ({ ...prev, humidity: "" }));
+                    }}
                     placeholder="VD: 74"
                   />
+                  {errors.humidity && <p className="text-red-500 text-[13px] mt-1">{errors.humidity}</p>}
                 </label>
 
                 <label className="grid gap-[6px]">
@@ -384,12 +447,16 @@ export default function Create() {
                     Mã số vùng trồng *
                   </span>
                   <input
-                    className="border-[1px] border-[#295242]/15 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
+                    className={`border-[1px] rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none transition-all hover:border-[#2a875f]/40
+                      ${errors.plantAreaId ? "border-red-500 focus:border-red-500" : "border-[#295242]/15 focus:border-[#2a875f]"}`}
                     value={plantAreaId}
-                    onChange={(e) => setPlantAreaId(e.target.value)}
+                    onChange={(e) => {
+                      setPlantAreaId(e.target.value);
+                      if (errors.plantAreaId) setErrors(prev => ({ ...prev, plantAreaId: "" }));
+                    }}
                     placeholder="VD: 8648768246584765"
-                    required
                   />
+                  {errors.plantAreaId && <p className="text-red-500 text-[13px] mt-1">{errors.plantAreaId}</p>}
                 </label>
 
                 <label className="grid gap-[6px] md:col-span-2 lg:col-span-3">
@@ -397,12 +464,16 @@ export default function Create() {
                     Vùng trồng *
                   </span>
                   <input
-                    className="border-[1px] border-[#295242]/15 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
+                    className={`border-[1px] rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none transition-all hover:border-[#2a875f]/40
+                      ${errors.origin ? "border-red-500 focus:border-red-500" : "border-[#295242]/15 focus:border-[#2a875f]"}`}
                     value={origin}
-                    onChange={(e) => setOrigin(e.target.value)}
+                    onChange={(e) => {
+                      setOrigin(e.target.value);
+                      if (errors.origin) setErrors(prev => ({ ...prev, origin: "" }));
+                    }}
                     placeholder="VD: Xã Đại Tâm, Huyện Mỹ Xuyên, Sóc Trăng"
-                    required
                   />
+                  {errors.origin && <p className="text-red-500 text-[13px] mt-1">{errors.origin}</p>}
                 </label>
               </div>
             </div>
@@ -441,21 +512,16 @@ export default function Create() {
                   </span>
                   <label
                     className={`relative flex flex-col items-center justify-center border-[2px] border-dashed rounded-[20px] p-[28px] cursor-pointer transition-all duration-180 
-                  ${image ? "border-[#2a875f] bg-[#f2faf5]" : "border-[#295242]/20 bg-white/50 hover:bg-white hover:border-[#2a875f]/50 shadow-sm"}`}
+                      ${image ? "border-[#2a875f] bg-[#f2faf5]" : "border-[#295242]/20 bg-white/50 hover:bg-white hover:border-[#2a875f]/50 shadow-sm"}
+                      ${errors.image ? "border-red-500 bg-red-50" : ""}`}
                     onDragOver={(e) => {
                       e.preventDefault();
-                      e.currentTarget.classList.add(
-                        "bg-[#f2faf5]",
-                        "border-[#2a875f]",
-                      );
+                      e.currentTarget.classList.add("bg-[#f2faf5]", "border-[#2a875f]");
                     }}
                     onDragLeave={(e) => {
                       e.preventDefault();
                       if (!image)
-                        e.currentTarget.classList.remove(
-                          "bg-[#f2faf5]",
-                          "border-[#2a875f]",
-                        );
+                        e.currentTarget.classList.remove("bg-[#f2faf5]", "border-[#2a875f]");
                     }}
                     onDrop={(e) => {
                       e.preventDefault();
@@ -467,15 +533,17 @@ export default function Create() {
                       className="hidden"
                       type="file"
                       accept="image/*"
-                      onChange={(e) => setImage(e.target.files?.[0] || null)}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0] || null;
+                        setImage(file);
+                        if (errors.image) setErrors(prev => ({ ...prev, image: "" }));
+                      }}
                     />
                     <div className="text-center">
                       {image ? (
                         <div className="flex flex-col items-center gap-[8px]">
                           <div className="w-[48px] h-[48px] rounded-full bg-[#2a875f]/15 flex items-center justify-center">
-                            <span className="text-[#2a875f] text-[20px]">
-                              ✓
-                            </span>
+                            <span className="text-[#2a875f] text-[20px]">✓</span>
                           </div>
                           <span className="text-[#1f392f] text-[14px] font-semibold break-all max-w-[200px]">
                             {image.name}
@@ -508,6 +576,7 @@ export default function Create() {
                       )}
                     </div>
                   </label>
+                  {errors.image && <p className="text-red-500 text-[13px] mt-1">{errors.image}</p>}
                 </div>
               </div>
             </div>
