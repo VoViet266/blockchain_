@@ -37,7 +37,7 @@ export default function Product() {
       } catch (fetchError) {
         if (fetchError.response?.status === 409) {
           setIsExactData(false);
-          setError('Dữ liệu sản phẩm không chính xác. Vui lòng liên hệ nhà sản xuất để biết thêm chi tiết.');
+          setError('Dữ liệu sản phẩm đã bị thay đổi.');
           return;
         }
         setError(
