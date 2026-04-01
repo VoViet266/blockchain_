@@ -9,11 +9,17 @@ import {
 } from "../../services/wallet.service";
 import { STATUS_OPTIONS_MAP } from "../../enum/status_option";
 
+const STATUS_FILTER_OPTIONS = ["ALL", "PLANTED", "HARVESTED", "PACKAGED", "SHIPPED", "DELIVERED", "SOLD"];
+
 export default function Home() {
   const [wallet, setWallet] = useState("");
   const [status, setStatus] = useState("Sẵn sàng kết nối ví để bắt đầu truy xuất nguồn gốc.");
   const [isConnecting, setIsConnecting] = useState(false);
   const [products, setProducts] = useState([]);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("ALL");
+
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
   const [productsError, setProductsError] = useState("");
 
@@ -21,6 +27,19 @@ export default function Home() {
     if (!wallet) return "Chưa kết nối";
     return `${wallet.slice(0, 6)}...${wallet.slice(-4)}`;
   }, [wallet]);
+
+  const filteredProducts = useMemo(() => {
+    return products.filter((item) => {
+      const matchesSearch =
+        item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.origin?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus =
+        statusFilter === "ALL" || item.latest_version?.status === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [products, searchQuery, statusFilter]);
+
 
   const connectWallet = async () => {
     try {
@@ -219,13 +238,38 @@ export default function Home() {
           {wallet && isLoadingProducts && <div className="rounded-[12px] border-[1px] border-[#d6e9de] bg-[#f6fbf8] text-[#355f4f] p-[12px] text-[14px]">Đang tải danh sách sản phẩm...</div>}
           {wallet && productsError && <div className="rounded-[12px] border-[1px] border-[#e6c0c0] bg-[#fff3f3] text-[#7d3434] p-[12px] text-[14px]">{productsError}</div>}
 
+          {/* Thanh tìm kiếm và lọc */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+            <input
+              type="text"
+              placeholder="Tìm theo tên hoặc nguồn gốc..."
+              className="px-12 py-10 rounded-xl border border-gray-200 focus:border-[#132e24] bg-white/50 outline-none"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <select
+              className="px-12 py-10 rounded-xl outline-none cursor-pointer border focus:border-[#132e24] border-gray-200 bg-white/50"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              {STATUS_FILTER_OPTIONS.map(opt => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-4 text-sm text-gray-500">
+            Tổng: <strong>{filteredProducts.length}</strong> sản phẩm
+          </div>
+
+
           {wallet && !isLoadingProducts && !productsError && products.length === 0 && (
             <div className="rounded-[12px] border-[1px] border-[#d6e9de] bg-[#f6fbf8] text-[#355f4f] p-[12px] text-[14px]">Ví này chưa có sản phẩm nào. Bạn có thể tạo sản phẩm mới ngay bây giờ.</div>
           )}
 
           {wallet && !isLoadingProducts && !productsError && products.length > 0 && Array.isArray(products) && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-[12px]">
-              {products.map((item) => (
+              {filteredProducts.map((item) => (
                 <Link key={item.id} className="grid gap-[10px] rounded-[18px] bg-white/82 border-[1px] border-[#23493c]/14 p-[12px] text-inherit no-underline transition-all duration-200 hover:-translate-y-[3px] hover:shadow-[0_14px_24px_rgba(35,73,60,0.12)]" to={`/product/${item.id}`}>
                   {item.latest_version?.image && (
                     <img className="w-full h-[150px] object-cover rounded-[12px] border-[1px] border-[#d7e8de] bg-[#f0f6f2]" src={toImageUrl(item.latest_version.image)} alt={`Product ${item.name}`} />
