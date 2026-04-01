@@ -206,17 +206,111 @@ export default function Update() {
         return null;
     }
   };
+  //hàm xử lý cập nhật
 
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!productId.trim()) {
-      setMessage("Vui lòng nhập Product ID.");
+    // ===== VALIDATE =====
+    if (!productId?.trim()) {
+      setMessage("Thiếu Product ID");
       return;
     }
 
     if (!image) {
-      setMessage("Vui lòng chọn ảnh phiên bản mới.");
+      setMessage("Vui lòng chọn ảnh minh chứng phù hợp với giai đoạn cập nhật.");
+      return;
+    }
+
+    // validate tọa độ
+    if (location) {
+      const regex = /^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/;
+      if (!regex.test(location)) {
+        setMessage("Tọa độ không đúng định dạng (VD: 10.123, 105.456)");
+        return;
+      }
+    }
+
+    // validate nhiệt độ
+    if (temperature && isNaN(temperature)) {
+      setMessage("Nhiệt độ phải là số");
+      return;
+    }
+
+    // validate độ ẩm
+    if (humidity && (isNaN(humidity) || humidity < 0 || humidity > 100)) {
+      setMessage("Độ ẩm phải từ 0 - 100%");
+      return;
+    }
+
+    // validate theo status
+    switch (status) {
+      case "PLANTED":
+      case "GROWING":
+        if (!additionalInfo.fertilizer) {
+          setMessage("Thiếu thông tin phân bón");
+          return;
+        }
+        break;
+
+      case "HARVESTED":
+        if (!additionalInfo.yield || isNaN(additionalInfo.yield)) {
+          setMessage("Sản lượng phải là số");
+          return;
+        }
+        if (!additionalInfo.quality) {
+          setMessage("Thiếu chất lượng");
+          return;
+        }
+        break;
+
+      case "INSPECTED":
+        if (!additionalInfo.inspector) {
+          setMessage("Thiếu đơn vị kiểm định");
+          return;
+        }
+        if (!additionalInfo.certificate) {
+          setMessage("Thiếu chứng chỉ");
+          return;
+        }
+        break;
+
+      case "PACKAGED":
+        if (!additionalInfo.batch_id) {
+          setMessage("Thiếu mã lô");
+          return;
+        }
+        if (!additionalInfo.expiry_date) {
+          setMessage("Thiếu hạn sử dụng");
+          return;
+        }
+        break;
+
+      case "SHIPPED":
+        if (!additionalInfo.temperature || isNaN(additionalInfo.temperature)) {
+          setMessage("Nhiệt độ vận chuyển phải là số");
+          return;
+        }
+        if (!additionalInfo.carrier) {
+          setMessage("Thiếu đơn vị vận chuyển");
+          return;
+        }
+        break;
+
+      default:
+        break;
+    }
+
+        // validate file ảnh (chỉ kiểm tra định dạng)
+    const validTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (image && !validTypes.includes(image.type)) {
+      setMessage("Ảnh phải là JPG, PNG hoặc WEBP");
+      return;
+    }
+
+    if (image && image.size > 5 * 1024 * 1024) {
+      setMessage("Ảnh không được vượt quá 5MB");
       return;
     }
 
