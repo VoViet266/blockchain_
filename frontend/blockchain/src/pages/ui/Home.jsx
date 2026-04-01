@@ -268,7 +268,12 @@ export default function Home() {
           )}
 
           {wallet && !isLoadingProducts && !productsError && products.length > 0 && Array.isArray(products) && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-[12px]">
+            <div className={`grid grid-cols-1 ${filteredProducts.length === 0 ? 'md:grid-cols-1' : 'md:grid-cols-3'} gap-[12px]`}>
+              {filteredProducts.length === 0 && (
+                <div className="rounded-[12px] border-[1px] w-full min-h-200 flex items-center justify-center border-[#d6e9de] bg-[#f6fbf8] text-[#355f4f] p-[12px] text-[14px]">
+                  Không tìm thấy sản phẩm nào khớp với tiêu chí tìm kiếm và lọc.
+                </div>
+              )}
               {filteredProducts.map((item) => (
                 <Link key={item.id} className="grid gap-[10px] rounded-[18px] bg-white/82 border-[1px] border-[#23493c]/14 p-[12px] text-inherit no-underline transition-all duration-200 hover:-translate-y-[3px] hover:shadow-[0_14px_24px_rgba(35,73,60,0.12)]" to={`/product/${item.id}`}>
                   {item.latest_version?.image && (
