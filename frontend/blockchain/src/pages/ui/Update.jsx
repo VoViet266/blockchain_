@@ -17,12 +17,28 @@ export default function Update() {
   const [humidity, setHumidity] = useState("");
   const [image, setImage] = useState(null);
   const [additionalInfo, setAdditionalInfo] = useState({});
+  const [errors, setErrors] = useState({
+      location: "",
+      temperature: "",
+      humidity: "",
+      image: "",
+      fertilizer: "",
+      pesticide: "",
+      yield: "",
+      quality: "",
+      inspector: "",
+      certificate: "",
+      batch_id: "",
+      expiry_date: "",
+      carrier: "",
+      additionalTemperature: "",
+    });
   const [message, setMessage] = useState(
     "Nhập thông tin cập nhật và tải ảnh mới cho phiên bản tiếp theo.",
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const renderStatusSpecificFields = () => {
+const renderStatusSpecificFields = () => {
     switch (status) {
       case "PLANTED":
       case "GROWING":
@@ -33,33 +49,37 @@ export default function Update() {
                 Loại phân bón
               </span>
               <input
-                className="border-[1px] border-[#295242]/15 rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]"
+                className={`border-[1px] rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]
+                  ${errors.fertilizer ? "border-red-500 focus:border-red-500" : "border-[#295242]/15"}`}
                 placeholder="VD: Phân hữu cơ vi sinh"
-                onChange={(e) =>
-                  setAdditionalInfo({
-                    ...additionalInfo,
-                    fertilizer: e.target.value,
-                  })
-                }
+                value={additionalInfo.fertilizer || ""}
+                onChange={(e) => {
+                  setAdditionalInfo({ ...additionalInfo, fertilizer: e.target.value });
+                  if (errors.fertilizer) setErrors(prev => ({ ...prev, fertilizer: "" }));
+                }}
               />
+              {errors.fertilizer && <p className="text-red-500 text-[13px] mt-1">{errors.fertilizer}</p>}
             </label>
+
             <label className="grid gap-[6px]">
               <span className="text-[12px] text-[#4a6d5d] font-bold uppercase tracking-wider">
                 Thuốc BVTV
               </span>
               <input
-                className="border-[1px] border-[#295242]/15 rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]"
+                className={`border-[1px] rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]
+                  ${errors.pesticide ? "border-red-500 focus:border-red-500" : "border-[#295242]/15"}`}
                 placeholder="VD: Không sử dụng"
-                onChange={(e) =>
-                  setAdditionalInfo({
-                    ...additionalInfo,
-                    pesticide: e.target.value,
-                  })
-                }
+                value={additionalInfo.pesticide || ""}
+                onChange={(e) => {
+                  setAdditionalInfo({ ...additionalInfo, pesticide: e.target.value });
+                  if (errors.pesticide) setErrors(prev => ({ ...prev, pesticide: "" }));
+                }}
               />
+              {errors.pesticide && <p className="text-red-500 text-[13px] mt-1">{errors.pesticide}</p>}
             </label>
           </div>
         );
+
       case "HARVESTED":
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[12px] p-[16px] bg-[#fcf9f0]/40 rounded-[16px] border-[1px] border-[#d4a017]/10">
@@ -69,33 +89,37 @@ export default function Update() {
               </span>
               <input
                 type="number"
-                className="border-[1px] border-[#295242]/15 rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]"
+                className={`border-[1px] rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]
+                  ${errors.yield ? "border-red-500 focus:border-red-500" : "border-[#295242]/15"}`}
                 placeholder="VD: 5000"
-                onChange={(e) =>
-                  setAdditionalInfo({
-                    ...additionalInfo,
-                    yield: e.target.value,
-                  })
-                }
+                value={additionalInfo.yield || ""}
+                onChange={(e) => {
+                  setAdditionalInfo({ ...additionalInfo, yield: e.target.value });
+                  if (errors.yield) setErrors(prev => ({ ...prev, yield: "" }));
+                }}
               />
+              {errors.yield && <p className="text-red-500 text-[13px] mt-1">{errors.yield}</p>}
             </label>
+
             <label className="grid gap-[6px]">
               <span className="text-[12px] text-[#4a6d5d] font-bold uppercase tracking-wider">
                 Độ chín / Chất lượng
               </span>
               <input
-                className="border-[1px] border-[#295242]/15 rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]"
+                className={`border-[1px] rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]
+                  ${errors.quality ? "border-red-500 focus:border-red-500" : "border-[#295242]/15"}`}
                 placeholder="VD: Chín vàng, đồng đều"
-                onChange={(e) =>
-                  setAdditionalInfo({
-                    ...additionalInfo,
-                    quality: e.target.value,
-                  })
-                }
+                value={additionalInfo.quality || ""}
+                onChange={(e) => {
+                  setAdditionalInfo({ ...additionalInfo, quality: e.target.value });
+                  if (errors.quality) setErrors(prev => ({ ...prev, quality: "" }));
+                }}
               />
+              {errors.quality && <p className="text-red-500 text-[13px] mt-1">{errors.quality}</p>}
             </label>
           </div>
         );
+
       case "INSPECTED":
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[12px] p-[16px] bg-[#f0f4f7]/40 rounded-[16px] border-[1px] border-[#2a6887]/10">
@@ -104,33 +128,37 @@ export default function Update() {
                 Đơn vị kiểm định
               </span>
               <input
-                className="border-[1px] border-[#295242]/15 rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]"
+                className={`border-[1px] rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]
+                  ${errors.inspector ? "border-red-500 focus:border-red-500" : "border-[#295242]/15"}`}
                 placeholder="VD: Quatest 3"
-                onChange={(e) =>
-                  setAdditionalInfo({
-                    ...additionalInfo,
-                    inspector: e.target.value,
-                  })
-                }
+                value={additionalInfo.inspector || ""}
+                onChange={(e) => {
+                  setAdditionalInfo({ ...additionalInfo, inspector: e.target.value });
+                  if (errors.inspector) setErrors(prev => ({ ...prev, inspector: "" }));
+                }}
               />
+              {errors.inspector && <p className="text-red-500 text-[13px] mt-1">{errors.inspector}</p>}
             </label>
+
             <label className="grid gap-[6px]">
               <span className="text-[12px] text-[#4a6d5d] font-bold uppercase tracking-wider">
                 Chứng chỉ
               </span>
               <input
-                className="border-[1px] border-[#295242]/15 rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]"
+                className={`border-[1px] rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]
+                  ${errors.certificate ? "border-red-500 focus:border-red-500" : "border-[#295242]/15"}`}
                 placeholder="VD: VietGAP-2024-01"
-                onChange={(e) =>
-                  setAdditionalInfo({
-                    ...additionalInfo,
-                    certificate: e.target.value,
-                  })
-                }
+                value={additionalInfo.certificate || ""}
+                onChange={(e) => {
+                  setAdditionalInfo({ ...additionalInfo, certificate: e.target.value });
+                  if (errors.certificate) setErrors(prev => ({ ...prev, certificate: "" }));
+                }}
               />
+              {errors.certificate && <p className="text-red-500 text-[13px] mt-1">{errors.certificate}</p>}
             </label>
           </div>
         );
+
       case "PACKAGED":
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[12px] p-[16px] bg-[#fdf2f2]/40 rounded-[16px] border-[1px] border-[#d9534f]/10">
@@ -139,33 +167,37 @@ export default function Update() {
                 Mã lô (Batch ID)
               </span>
               <input
-                className="border-[1px] border-[#295242]/15 rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]"
+                className={`border-[1px] rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]
+                  ${errors.batch_id ? "border-red-500 focus:border-red-500" : "border-[#295242]/15"}`}
                 placeholder="VD: BATCH-001-2024"
-                onChange={(e) =>
-                  setAdditionalInfo({
-                    ...additionalInfo,
-                    batch_id: e.target.value,
-                  })
-                }
+                value={additionalInfo.batch_id || ""}
+                onChange={(e) => {
+                  setAdditionalInfo({ ...additionalInfo, batch_id: e.target.value });
+                  if (errors.batch_id) setErrors(prev => ({ ...prev, batch_id: "" }));
+                }}
               />
+              {errors.batch_id && <p className="text-red-500 text-[13px] mt-1">{errors.batch_id}</p>}
             </label>
+
             <label className="grid gap-[6px]">
               <span className="text-[12px] text-[#4a6d5d] font-bold uppercase tracking-wider">
                 Hạn sử dụng
               </span>
               <input
                 type="date"
-                className="border-[1px] border-[#295242]/15 rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]"
-                onChange={(e) =>
-                  setAdditionalInfo({
-                    ...additionalInfo,
-                    expiry_date: e.target.value,
-                  })
-                }
+                className={`border-[1px] rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]
+                  ${errors.expiry_date ? "border-red-500 focus:border-red-500" : "border-[#295242]/15"}`}
+                value={additionalInfo.expiry_date || ""}
+                onChange={(e) => {
+                  setAdditionalInfo({ ...additionalInfo, expiry_date: e.target.value });
+                  if (errors.expiry_date) setErrors(prev => ({ ...prev, expiry_date: "" }));
+                }}
               />
+              {errors.expiry_date && <p className="text-red-500 text-[13px] mt-1">{errors.expiry_date}</p>}
             </label>
           </div>
         );
+
       case "SHIPPED":
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[12px] p-[16px] bg-[#f9f0fd]/40 rounded-[16px] border-[1px] border-[#8e44ad]/10">
@@ -175,126 +207,170 @@ export default function Update() {
               </span>
               <input
                 type="number"
-                className="border-[1px] border-[#295242]/15 rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]"
+                className={`border-[1px] rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]
+                  ${errors.additionalTemperature ? "border-red-500 focus:border-red-500" : "border-[#295242]/15"}`}
                 placeholder="VD: 5"
-                onChange={(e) =>
-                  setAdditionalInfo({
-                    ...additionalInfo,
-                    temperature: e.target.value,
-                  })
-                }
+                value={additionalInfo.temperature || ""}
+                onChange={(e) => {
+                  setAdditionalInfo({ ...additionalInfo, temperature: e.target.value });
+                  if (errors.additionalTemperature) setErrors(prev => ({ ...prev, additionalTemperature: "" }));
+                }}
               />
+              {errors.additionalTemperature && <p className="text-red-500 text-[13px] mt-1">{errors.additionalTemperature}</p>}
             </label>
+
             <label className="grid gap-[6px]">
               <span className="text-[12px] text-[#4a6d5d] font-bold uppercase tracking-wider">
                 Đơn vị vận chuyển
               </span>
               <input
-                className="border-[1px] border-[#295242]/15 rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]"
+                className={`border-[1px] rounded-[10px] p-[10px] bg-white text-[#1f392f] text-[14px] outline-none focus:border-[#2a875f]
+                  ${errors.carrier ? "border-red-500 focus:border-red-500" : "border-[#295242]/15"}`}
                 placeholder="VD: Giao Hàng Tiết Kiệm"
-                onChange={(e) =>
-                  setAdditionalInfo({
-                    ...additionalInfo,
-                    carrier: e.target.value,
-                  })
-                }
+                value={additionalInfo.carrier || ""}
+                onChange={(e) => {
+                  setAdditionalInfo({ ...additionalInfo, carrier: e.target.value });
+                  if (errors.carrier) setErrors(prev => ({ ...prev, carrier: "" }));
+                }}
               />
+              {errors.carrier && <p className="text-red-500 text-[13px] mt-1">{errors.carrier}</p>}
             </label>
           </div>
         );
+
       default:
         return null;
     }
   };
+//hàm reset lỗi
+  const resetErrors = () => {
+    setErrors({
+      location: "",
+      temperature: "",
+      humidity: "",
+      image: "",
+      fertilizer: "",
+      pesticide: "",
+      yield: "",
+      quality: "",
+      inspector: "",
+      certificate: "",
+      batch_id: "",
+      expiry_date: "",
+      carrier: "",
+      additionalTemperature: "",
+    });
+  };
   //hàm xử lý cập nhật
 
   
-  const handleSubmit = async (event) => {
+const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // ===== VALIDATE =====
-    if (!productId?.trim()) {
-      setMessage("Thiếu Product ID");
-      return;
-    }
+    resetErrors();   // Reset tất cả lỗi trước khi validate
 
+    let hasError = false;
+
+    // 1. Ảnh bắt buộc
     if (!image) {
-      setMessage("Vui lòng chọn ảnh minh chứng phù hợp với giai đoạn cập nhật.");
-      return;
-    }
-
-    // validate tọa độ
-    if (location) {
-      const regex = /^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/;
-      if (!regex.test(location)) {
-        setMessage("Tọa độ không đúng định dạng (VD: 10.123, 105.456)");
-        return;
+      setErrors(prev => ({ ...prev, image: "Vui lòng chọn ảnh minh chứng." }));
+      hasError = true;
+    } else {
+      const validTypes = ["image/jpeg", "image/png", "image/webp"];
+      if (!validTypes.includes(image.type)) {
+        setErrors(prev => ({ ...prev, image: "Ảnh phải là JPG, PNG hoặc WEBP." }));
+        hasError = true;
+      }
+      if (image.size > 5 * 1024 * 1024) {
+        setErrors(prev => ({ ...prev, image: "Ảnh không được vượt quá 5MB." }));
+        hasError = true;
       }
     }
 
-    // validate nhiệt độ
-    if (temperature && isNaN(temperature)) {
-      setMessage("Nhiệt độ phải là số");
-      return;
+    // 2. Tọa độ
+    if (location) {
+      const regex = /^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/;
+      if (!regex.test(location)) {
+        setErrors(prev => ({ ...prev, location: "Tọa độ phải đúng định dạng: 10.123, 105.456" }));
+        hasError = true;
+      }
     }
 
-    // validate độ ẩm
-    if (humidity && (isNaN(humidity) || humidity < 0 || humidity > 100)) {
-      setMessage("Độ ẩm phải từ 0 - 100%");
-      return;
+// 3. Nhiệt độ chung
+    if (temperature) {
+      const tempNum = parseFloat(temperature);
+      if (isNaN(tempNum) || tempNum < -50 || tempNum > 100) {
+        setErrors(prev => ({ 
+          ...prev, 
+          temperature: "Nhiệt độ phải nằm trong khoảng từ -50°C đến 100°C." 
+        }));
+        hasError = true;
+      }
     }
 
-    // validate theo status
+    // 4. Độ ẩm
+    if (humidity) {
+      const humNum = parseFloat(humidity);
+      if (isNaN(humNum) || humNum < 0 || humNum > 100) {
+        setErrors(prev => ({ 
+          ...prev, 
+          humidity: "Độ ẩm phải nằm trong khoảng từ 0% đến 100%." 
+        }));
+        hasError = true;
+      }
+    }
+
+    // 5. Validate theo status (các trường bổ sung)
     switch (status) {
       case "PLANTED":
       case "GROWING":
-        if (!additionalInfo.fertilizer) {
-          setMessage("Thiếu thông tin phân bón");
-          return;
+        if (!additionalInfo.fertilizer?.trim()) {
+          setErrors(prev => ({ ...prev, fertilizer: "Vui lòng nhập loại phân bón." }));
+          hasError = true;
         }
         break;
 
       case "HARVESTED":
-        if (!additionalInfo.yield || isNaN(additionalInfo.yield)) {
-          setMessage("Sản lượng phải là số");
-          return;
+        if (!additionalInfo.yield || isNaN(parseFloat(additionalInfo.yield))) {
+          setErrors(prev => ({ ...prev, yield: "Sản lượng phải là số hợp lệ." }));
+          hasError = true;
         }
-        if (!additionalInfo.quality) {
-          setMessage("Thiếu chất lượng");
-          return;
+        if (!additionalInfo.quality?.trim()) {
+          setErrors(prev => ({ ...prev, quality: "Vui lòng nhập chất lượng." }));
+          hasError = true;
         }
         break;
 
       case "INSPECTED":
-        if (!additionalInfo.inspector) {
-          setMessage("Thiếu đơn vị kiểm định");
-          return;
+        if (!additionalInfo.inspector?.trim()) {
+          setErrors(prev => ({ ...prev, inspector: "Vui lòng nhập đơn vị kiểm định." }));
+          hasError = true;
         }
-        if (!additionalInfo.certificate) {
-          setMessage("Thiếu chứng chỉ");
-          return;
+        if (!additionalInfo.certificate?.trim()) {
+          setErrors(prev => ({ ...prev, certificate: "Vui lòng nhập chứng chỉ." }));
+          hasError = true;
         }
         break;
 
       case "PACKAGED":
-        if (!additionalInfo.batch_id) {
-          setMessage("Thiếu mã lô");
-          return;
+        if (!additionalInfo.batch_id?.trim()) {
+          setErrors(prev => ({ ...prev, batch_id: "Vui lòng nhập mã lô." }));
+          hasError = true;
         }
         if (!additionalInfo.expiry_date) {
-          setMessage("Thiếu hạn sử dụng");
-          return;
+          setErrors(prev => ({ ...prev, expiry_date: "Vui lòng chọn hạn sử dụng." }));
+          hasError = true;
         }
         break;
 
       case "SHIPPED":
-        if (!additionalInfo.temperature || isNaN(additionalInfo.temperature)) {
-          setMessage("Nhiệt độ vận chuyển phải là số");
-          return;
+        if (!additionalInfo.temperature || isNaN(parseFloat(additionalInfo.temperature))) {
+          setErrors(prev => ({ ...prev, additionalTemperature: "Nhiệt độ vận chuyển phải là số." }));
+          hasError = true;
         }
-        if (!additionalInfo.carrier) {
-          setMessage("Thiếu đơn vị vận chuyển");
-          return;
+        if (!additionalInfo.carrier?.trim()) {
+          setErrors(prev => ({ ...prev, carrier: "Vui lòng nhập đơn vị vận chuyển." }));
+          hasError = true;
         }
         break;
 
@@ -302,18 +378,10 @@ export default function Update() {
         break;
     }
 
-        // validate file ảnh (chỉ kiểm tra định dạng)
-    const validTypes = ["image/jpeg", "image/png", "image/webp"];
-    if (image && !validTypes.includes(image.type)) {
-      setMessage("Ảnh phải là JPG, PNG hoặc WEBP");
+    if (hasError) {
+      setMessage("Vui lòng kiểm tra lại các thông tin được đánh dấu đỏ.");
       return;
     }
-
-    if (image && image.size > 5 * 1024 * 1024) {
-      setMessage("Ảnh không được vượt quá 5MB");
-      return;
-    }
-
     const formData = new FormData();
     formData.append("id", productId.trim());
     formData.append("status", status);
@@ -393,11 +461,16 @@ export default function Update() {
                   Tọa độ cập nhật
                 </span>
                 <input
-                  className="border-[1px] border-[#285242]/20 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
+                  className={`border-[1px] rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none transition-all hover:border-[#2a875f]/40
+                    ${errors.location ? "border-red-500 focus:border-red-500" : "border-[#285242]/20 focus:border-[#2a875f]"}`}
                   value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  onChange={(e) => {
+                    setLocation(e.target.value);
+                    if (errors.location) setErrors(prev => ({ ...prev, location: "" }));
+                  }}
                   placeholder="Để trống nếu không đổi"
                 />
+                {errors.location && <p className="text-red-500 text-[13px] mt-1">{errors.location}</p>}
               </label>
 
               <label className="grid gap-[6px]">
@@ -405,11 +478,16 @@ export default function Update() {
                   Nhiệt độ
                 </span>
                 <input
-                  className="border-[1px] border-[#285242]/20 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
+                  className={`border-[1px] rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none transition-all hover:border-[#2a875f]/40
+                    ${errors.temperature ? "border-red-500 focus:border-red-500" : "border-[#285242]/20 focus:border-[#2a875f]"}`}
                   value={temperature}
-                  onChange={(e) => setTemperature(e.target.value)}
+                  onChange={(e) => {
+                    setTemperature(e.target.value);
+                    if (errors.temperature) setErrors(prev => ({ ...prev, temperature: "" }));
+                  }}
                   placeholder="Để trống nếu không đổi"
                 />
+                {errors.temperature && <p className="text-red-500 text-[13px] mt-1">{errors.temperature}</p>}
               </label>
 
               <label className="grid gap-[6px]">
@@ -417,11 +495,16 @@ export default function Update() {
                   Độ ẩm
                 </span>
                 <input
-                  className="border-[1px] border-[#285242]/20 rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none focus:border-[#2a875f] transition-all hover:border-[#2a875f]/40"
+                  className={`border-[1px] rounded-[12px] p-[12px] bg-white text-[#1f392f] font-inherit outline-none transition-all hover:border-[#2a875f]/40
+                    ${errors.humidity ? "border-red-500 focus:border-red-500" : "border-[#285242]/20 focus:border-[#2a875f]"}`}
                   value={humidity}
-                  onChange={(e) => setHumidity(e.target.value)}
+                  onChange={(e) => {
+                    setHumidity(e.target.value);
+                    if (errors.humidity) setErrors(prev => ({ ...prev, humidity: "" }));
+                  }}
                   placeholder="Để trống nếu không đổi"
                 />
+                {errors.humidity && <p className="text-red-500 text-[13px] mt-1">{errors.humidity}</p>}
               </label>
 
               <div className="md:col-span-2">
@@ -477,9 +560,11 @@ export default function Update() {
                     className="hidden"
                     type="file"
                     accept="image/*"
-                    onChange={(event) =>
-                      setImage(event.target.files?.[0] || null)
-                    }
+                    onChange={(event) => {
+                      const file = event.target.files?.[0] || null;
+                      setImage(file);
+                      if (errors.image) setErrors(prev => ({ ...prev, image: "" }));
+                    }}
                   />
                   <div className="text-center">
                     {image ? (
@@ -506,6 +591,7 @@ export default function Update() {
                     )}
                   </div>
                 </label>
+                {errors.image && <p className="text-red-500 text-[13px] mt-1">{errors.image}</p>}
               </div>
             </div>
 
