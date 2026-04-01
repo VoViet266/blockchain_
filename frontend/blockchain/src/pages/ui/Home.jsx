@@ -7,13 +7,23 @@ import {
   subscribeWalletChanges,
   WALLET_STORAGE_KEY,
 } from "../../services/wallet.service";
-import { STATUS_OPTIONS_MAP } from "../../enum/status_option";
+import { STATUS_OPTIONS, STATUS_OPTIONS_MAP } from "../../enum/status_option";
 
-const STATUS_FILTER_OPTIONS = ["ALL", "PLANTED", "HARVESTED", "PACKAGED", "SHIPPED", "DELIVERED", "SOLD"];
+const STATUS_FILTER_OPTIONS = [
+  "ALL",
+  "PLANTED",
+  "HARVESTED",
+  "PACKAGED",
+  "SHIPPED",
+  "DELIVERED",
+  "SOLD",
+];
 
 export default function Home() {
   const [wallet, setWallet] = useState("");
-  const [status, setStatus] = useState("Sẵn sàng kết nối ví để bắt đầu truy xuất nguồn gốc.");
+  const [status, setStatus] = useState(
+    "Sẵn sàng kết nối ví để bắt đầu truy xuất nguồn gốc.",
+  );
   const [isConnecting, setIsConnecting] = useState(false);
   const [products, setProducts] = useState([]);
 
@@ -40,7 +50,6 @@ export default function Home() {
     });
   }, [products, searchQuery, statusFilter]);
 
-
   const connectWallet = async () => {
     try {
       setIsConnecting(true);
@@ -62,7 +71,9 @@ export default function Home() {
     setProducts([]);
     setProductsError("");
     localStorage.removeItem(WALLET_STORAGE_KEY);
-    setStatus("Đã ngắt kết nối trong ứng dụng. Nếu muốn thu hồi quyền hoàn toàn, hãy ngắt trong MetaMask.");
+    setStatus(
+      "Đã ngắt kết nối trong ứng dụng. Nếu muốn thu hồi quyền hoàn toàn, hãy ngắt trong MetaMask.",
+    );
   };
 
   useEffect(() => {
@@ -95,7 +106,9 @@ export default function Home() {
       } else {
         setWallet("");
         localStorage.removeItem(WALLET_STORAGE_KEY);
-        setStatus("MetaMask đã ngắt kết nối. Vui lòng kết nối lại để tiếp tục.");
+        setStatus(
+          "MetaMask đã ngắt kết nối. Vui lòng kết nối lại để tiếp tục.",
+        );
       }
     });
 
@@ -123,7 +136,10 @@ export default function Home() {
         if (!error?.response) {
           setProductsError("Không kết nối được backend");
         } else {
-          setProductsError(error?.response?.data?.detail || "Không tải được danh sách sản phẩm.");
+          setProductsError(
+            error?.response?.data?.detail ||
+              "Không tải được danh sách sản phẩm.",
+          );
         }
       } finally {
         setIsLoadingProducts(false);
@@ -145,7 +161,6 @@ export default function Home() {
   return (
     <div className="min-h-[100vh] p-[24px] font-sf-pro text-[#21352c] overflow-x-hidden bg-[radial-gradient(circle_at_12%_18%,rgba(255,196,95,0.28),transparent_42%),radial-gradient(circle_at_88%_12%,rgba(28,127,91,0.2),transparent_40%),linear-gradient(150deg,#f7f4e8_0%,#eef3dc_50%,#dff0e4_100%)]">
       <div className="max-w-[1080px] mx-auto grid gap-[18px] animate-[fade-up_680ms_ease-out]">
-
         <span className="w-fit border-[1px] border-[#2f6d56] text-[#245542] text-[12px] tracking-[0.12em] uppercase rounded-[999px] px-[12px] py-[8px] bg-white/60 backdrop-blur-[4px]">
           Niềm tin tuyệt đối
         </span>
@@ -156,7 +171,8 @@ export default function Home() {
               Agri Trace Platform
             </h1>
             <p className="m-0 text-[#365548] max-w-[52ch] leading-[1.65]">
-              Theo dõi toàn bộ vòng đời nông sản từ thu hoạch, vận chuyển đến điểm bán với dữ liệu minh bạch trên blockchain.
+              Theo dõi toàn bộ vòng đời nông sản từ thu hoạch, vận chuyển đến
+              điểm bán với dữ liệu minh bạch trên blockchain.
             </p>
 
             <div className="flex flex-wrap gap-[12px] mt-[22px]">
@@ -197,12 +213,15 @@ export default function Home() {
             <div className="absolute top-[-70px] right-[-48px] w-[180px] h-[180px] rounded-[50%] bg-[#ffd161]/20 blur-[2px] pointer-events-none"></div>
             <div className="absolute bottom-[-78px] left-[-56px] w-[180px] h-[180px] rounded-[50%] bg-[#bdffd6]/16 blur-[2px] pointer-events-none"></div>
             <div className="relative z-[2]">
-              <p className="m-0 mb-[8px] text-[12px] uppercase tracking-[0.14em] text-[#dbffef]">Wallet</p>
+              <p className="m-0 mb-[8px] text-[12px] uppercase tracking-[0.14em] text-[#dbffef]">
+                Wallet
+              </p>
               <p className="text-[24px] md:text-[28px] leading-[1.2] m-0 font-bold break-all text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.28)]">
                 {shortWallet}
               </p>
               <p className="mt-[14px] mb-0 text-[#f3fff8] text-[14px] leading-[1.5]">
-                Địa chỉ ví được dùng để ký giao dịch và xác thực mọi thao tác ghi nhận hành trình sản phẩm.
+                Địa chỉ ví được dùng để ký giao dịch và xác thực mọi thao tác
+                ghi nhận hành trình sản phẩm.
               </p>
             </div>
           </article>
@@ -211,32 +230,58 @@ export default function Home() {
         <section className="grid grid-cols-1 md:grid-cols-3 gap-[12px]">
           <article className="rounded-[18px] p-[16px] bg-white/78 border-[1px] border-[#23493c]/12 animate-[pop-in_480ms_ease-out]">
             <h3 className="m-0 mb-[8px] text-[18px] font-bold">Minh bạch</h3>
-            <p className="m-0 text-[#3c5d4f] leading-[1.55] text-[14px]">Dữ liệu truy xuất không thể chỉnh sửa sau khi đã ghi lên blockchain.</p>
+            <p className="m-0 text-[#3c5d4f] leading-[1.55] text-[14px]">
+              Dữ liệu truy xuất không thể chỉnh sửa sau khi đã ghi lên
+              blockchain.
+            </p>
           </article>
           <article className="rounded-[18px] p-[16px] bg-white/78 border-[1px] border-[#23493c]/12 animate-[pop-in_480ms_ease-out]">
             <h3 className="m-0 mb-[8px] text-[18px] font-bold">Nhanh gọn</h3>
-            <p className="m-0 text-[#3c5d4f] leading-[1.55] text-[14px]">Tạo sản phẩm, cập nhật trạng thái và tra cứu thông tin chỉ trong vài bước.</p>
+            <p className="m-0 text-[#3c5d4f] leading-[1.55] text-[14px]">
+              Tạo sản phẩm, cập nhật trạng thái và tra cứu thông tin chỉ trong
+              vài bước.
+            </p>
           </article>
           <article className="rounded-[18px] p-[16px] bg-white/78 border-[1px] border-[#23493c]/12 animate-[pop-in_480ms_ease-out]">
             <h3 className="m-0 mb-[8px] text-[18px] font-bold">Đáng tin</h3>
-            <p className="m-0 text-[#3c5d4f] leading-[1.55] text-[14px]">Người mua kiểm tra lịch sử hàng hóa tức thì bằng mã sản phẩm duy nhất.</p>
+            <p className="m-0 text-[#3c5d4f] leading-[1.55] text-[14px]">
+              Người mua kiểm tra lịch sử hàng hóa tức thì bằng mã sản phẩm duy
+              nhất.
+            </p>
           </article>
         </section>
 
         <section className="mt-[8px] bg-white/78 border-[1px] border-[#285946]/20 rounded-[24px] p-[24px] shadow-[0_24px_45px_rgba(40,70,58,0.08)]">
           <div className="flex flex-wrap items-center justify-between gap-[10px] mb-[10px]">
             <div>
-              <h2 className="m-0 text-[26px] md:text-[4vw] lg:text-[40px] text-[#163629] font-bold">Nông sản của bạn</h2>
-              <p className="m-0 text-[#365548] text-[14px]">Sau khi kết nối MetaMask, hệ thống sẽ hiển thị các sản phẩm thuộc địa chỉ này.</p>
+              <h2 className="m-0 text-[26px] md:text-[4vw] lg:text-[40px] text-[#163629] font-bold">
+                Nông sản của bạn
+              </h2>
+              <p className="m-0 text-[#365548] text-[14px]">
+                Sau khi kết nối MetaMask, hệ thống sẽ hiển thị các sản phẩm
+                thuộc địa chỉ này.
+              </p>
             </div>
             <span className="rounded-[999px] border-[1px] border-[#254f3f]/25 bg-white/75 px-[12px] py-[8px] text-[#2a5242] text-[13px]">
               {shortWallet}
             </span>
           </div>
 
-          {!wallet && <div className="rounded-[12px] border-[1px] border-[#d6e9de] bg-[#f6fbf8] text-[#355f4f] p-[12px] text-[14px]">Hãy kết nối MetaMask để xem danh sách sản phẩm của bạn.</div>}
-          {wallet && isLoadingProducts && <div className="rounded-[12px] border-[1px] border-[#d6e9de] bg-[#f6fbf8] text-[#355f4f] p-[12px] text-[14px]">Đang tải danh sách sản phẩm...</div>}
-          {wallet && productsError && <div className="rounded-[12px] border-[1px] border-[#e6c0c0] bg-[#fff3f3] text-[#7d3434] p-[12px] text-[14px]">{productsError}</div>}
+          {!wallet && (
+            <div className="rounded-[12px] border-[1px] border-[#d6e9de] bg-[#f6fbf8] text-[#355f4f] p-[12px] text-[14px]">
+              Hãy kết nối MetaMask để xem danh sách sản phẩm của bạn.
+            </div>
+          )}
+          {wallet && isLoadingProducts && (
+            <div className="rounded-[12px] border-[1px] border-[#d6e9de] bg-[#f6fbf8] text-[#355f4f] p-[12px] text-[14px]">
+              Đang tải danh sách sản phẩm...
+            </div>
+          )}
+          {wallet && productsError && (
+            <div className="rounded-[12px] border-[1px] border-[#e6c0c0] bg-[#fff3f3] text-[#7d3434] p-[12px] text-[14px]">
+              {productsError}
+            </div>
+          )}
 
           {/* Thanh tìm kiếm và lọc */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
@@ -252,8 +297,11 @@ export default function Home() {
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
-              {STATUS_FILTER_OPTIONS.map(opt => (
-                <option key={opt} value={opt}>{opt}</option>
+              <option value="ALL">Tất cả trạng thái</option>
+              {STATUS_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
               ))}
             </select>
           </div>
@@ -262,32 +310,57 @@ export default function Home() {
             Tổng: <strong>{filteredProducts.length}</strong> sản phẩm
           </div>
 
+          {wallet &&
+            !isLoadingProducts &&
+            !productsError &&
+            products.length === 0 && (
+              <div className="rounded-[12px] border-[1px] border-[#d6e9de] bg-[#f6fbf8] text-[#355f4f] p-[12px] text-[14px]">
+                Ví này chưa có sản phẩm nào. Bạn có thể tạo sản phẩm mới ngay
+                bây giờ.
+              </div>
+            )}
 
-          {wallet && !isLoadingProducts && !productsError && products.length === 0 && (
-            <div className="rounded-[12px] border-[1px] border-[#d6e9de] bg-[#f6fbf8] text-[#355f4f] p-[12px] text-[14px]">Ví này chưa có sản phẩm nào. Bạn có thể tạo sản phẩm mới ngay bây giờ.</div>
-          )}
-
-          {wallet && !isLoadingProducts && !productsError && products.length > 0 && Array.isArray(products) && (
-            <div className={`grid grid-cols-1 ${filteredProducts.length === 0 ? 'md:grid-cols-1' : 'md:grid-cols-3'} gap-[12px]`}>
-              {filteredProducts.length === 0 && (
-                <div className="rounded-[12px] border-[1px] w-full min-h-200 flex items-center justify-center border-[#d6e9de] bg-[#f6fbf8] text-[#355f4f] p-[12px] text-[14px]">
-                  Không tìm thấy sản phẩm nào khớp với tiêu chí tìm kiếm và lọc.
-                </div>
-              )}
-              {filteredProducts.map((item) => (
-                <Link key={item.id} className="grid gap-[10px] rounded-[18px] bg-white/82 border-[1px] border-[#23493c]/14 p-[12px] text-inherit no-underline transition-all duration-200 hover:-translate-y-[3px] hover:shadow-[0_14px_24px_rgba(35,73,60,0.12)]" to={`/product/${item.id}`}>
-                  {item.latest_version?.image && (
-                    <img className="w-full h-[150px] object-cover rounded-[12px] border-[1px] border-[#d7e8de] bg-[#f0f6f2]" src={toImageUrl(item.latest_version.image)} alt={`Product ${item.name}`} />
-                  )}
-                  <h3 className="m-0 font-bold text-[#1f4134] text-[17px]">{item.name}</h3>
-                  <p className="m-0 text-[#3d6051] text-[13px] leading-[1.5]">Origin: {item.origin}</p>
-                  <span className="w-fit rounded-[999px] px-[9px] py-[5px] text-[11px] tracking-wider uppercase border-[1px] border-[#cfe5d8] text-[#266044] bg-[#ecf8f1] font-bold">
-                    {STATUS_OPTIONS_MAP[item.latest_version?.status] || "NO STATUS"}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          )}
+          {wallet &&
+            !isLoadingProducts &&
+            !productsError &&
+            products.length > 0 &&
+            Array.isArray(products) && (
+              <div
+                className={`grid grid-cols-1 ${filteredProducts.length === 0 ? "md:grid-cols-1" : "md:grid-cols-3"} gap-[12px]`}
+              >
+                {filteredProducts.length === 0 && (
+                  <div className="rounded-[12px] border-[1px] w-full min-h-200 flex items-center justify-center border-[#d6e9de] bg-[#f6fbf8] text-[#355f4f] p-[12px] text-[14px]">
+                    Không tìm thấy sản phẩm nào khớp với tiêu chí tìm kiếm và
+                    lọc.
+                  </div>
+                )}
+                {filteredProducts.map((item) => (
+                  <Link
+                    key={item.id}
+                    className="grid gap-[10px] rounded-[18px] bg-white/82 border-[1px] border-[#23493c]/14 p-[12px] text-inherit no-underline transition-all duration-200 hover:-translate-y-[3px] hover:shadow-[0_14px_24px_rgba(35,73,60,0.12)]"
+                    to={`/product/${item.id}`}
+                  >
+                    {item.latest_version?.image && (
+                      <img
+                        className="w-full h-[150px] object-cover rounded-[12px] border-[1px] border-[#d7e8de] bg-[#f0f6f2]"
+                        src={toImageUrl(item.latest_version.image)}
+                        alt={`Product ${item.name}`}
+                      />
+                    )}
+                    <h3 className="m-0 font-bold text-[#1f4134] text-[17px]">
+                      {item.name}
+                    </h3>
+                    <p className="m-0 text-[#3d6051] text-[13px] leading-[1.5]">
+                      Origin: {item.origin}
+                    </p>
+                    <span className="w-fit rounded-[999px] px-[9px] py-[5px] text-[11px] tracking-wider uppercase border-[1px] border-[#cfe5d8] text-[#266044] bg-[#ecf8f1] font-bold">
+                      {STATUS_OPTIONS_MAP[item.latest_version?.status] ||
+                        "NO STATUS"}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            )}
         </section>
       </div>
     </div>
