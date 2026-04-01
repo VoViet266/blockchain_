@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createProduct } from "../../services/api.service";
+import { createProduct, generateHash } from "../../services/api.service";
 import {
   connectWalletWithEthers,
   getConnectedWalletWithEthers,
@@ -171,34 +171,56 @@ export default function Create() {
     try {
       setIsSubmitting(true);
 
-      setStatus("Đang tải dữ liệu và ảnh lên máy chủ...");
-      const response = await createProduct(formData);
+      setStatus("Đang tải ảnh và tạo hash...");
+      const { uuid, hash, image: imageUrl } = await generateHash(formData);
 
-      const { uuid, hash } = response;
       setStatus("Đang yêu cầu ký giao dịch...");
       const txHash = await addProductContract(uuid, hash);
-      const receipt = await txHash.wait();
-      if (receipt.status === 1) {
-      }
 
-      setStatus(`Tạo sản phẩm thành công! TxHash: ${txHash.slice(0, 10)}...`);
+      setStatus(
+        `Đang lưu dữ liệu...`,
+      );
+
+      await createProduct({
+        uuid,
+        hash,
+        txHash,
+        name: name.trim(),
+        product_type: productType.trim(),
+        variety: variety.trim(),
+        farm_name: farmName.trim(),
+        location: location.trim(),
+        producer: producer.trim(),
+        plant_area_id: plantAreaId.trim(),
+        origin: origin.trim(),
+        temperature: temperature.trim(),
+        humidity: humidity.trim(),
+        description: description.trim(),
+        wallet,
+        image: imageUrl, // ✅ dùng URL, không phải file
+      });
+
+      setStatus(
+        `Sản phẩm đã được ghi nhận! TxHash: ${txHash.slice(0, 10)}...`
+      );
+
+      navigate(`/product/${uuid}`);
       setName("");
       setOrigin("");
       setImage(null);
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
     } catch (error) {
-      console.error("Lỗi tạo sản phẩm:", error);
-      if (!error?.response && !error.message?.includes("MetaMask")) {
-        setStatus(
-          "Không kết nối được backend. Hãy kiểm tra kết nối và thử lại.",
-        );
+      console.log("Lỗi tạo sản phẩm:", { error });
+
+      // 🔥 bắt lỗi MetaMask (quan trọng)
+      if (error.code === 4001) {
+        setStatus("Bạn đã huỷ ký giao dịch.");
+      } else if (!error?.response) {
+        setStatus("Không kết nối được backend.");
       } else {
         setStatus(
           error?.response?.data?.detail ||
-            error?.message ||
-            "Thao tác thất bại.",
+          error?.message ||
+          "Thao tác thất bại."
         );
       }
     } finally {

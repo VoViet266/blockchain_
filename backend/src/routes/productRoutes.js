@@ -7,6 +7,7 @@ const router = Router();
 router.post("/create", upload.single("image"), productController.createProduct);
 router.post("/update", upload.single("image"), productController.updateProduct);
 router.get("/product/:id", integrityCheck, productController.getProductHistory);
+router.post("/generate-hash", upload.single("image"), productController.generateHash);
 router.get("/products", productController.getMyProducts);
 router.get("/verify/:id", productController.verifyProductData);
 
